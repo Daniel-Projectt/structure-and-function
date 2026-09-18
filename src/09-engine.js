@@ -156,12 +156,21 @@ function diagramQuiz(dg){
   });
 }
 
+/* The verdict on a score: title first, then the honest advice. */
+function verdictFor(p){
+  if(p === 100) return {t:"You’re the GOAT.", a:"Nothing left here. Push into a harder mix — all units, application only."};
+  if(p >= 85)   return {t:"You’re him.", a:"Strong. The misses below are the whole job now."};
+  if(p >= 70)   return {t:"Main character energy.", a:"Solid base, but the gaps are real. Work the misses, then retake."};
+  if(p >= 50)   return {t:"You’re a bot.", a:"About half. Back to the flashcards for this unit before testing again."};
+  return {t:"You’re cheeks.", a:"Start with the flashcards and the diagrams. Testing before the material is in place mostly measures frustration."};
+}
+
 /* ---- tests run without a browser ---- */
 if(typeof window === "undefined"){
   module.exports = {UNITS:UNITS, DIAGRAMS:DIAGRAMS, PLATES:PLATES, ALL_CARDS:ALL_CARDS, ALL_QS:ALL_QS,
     MATCHSETS:MATCHSETS, GEN_QS:GEN_QS, genFor:genFor, matchSetsFor:matchSetsFor, matchFromSet:matchFromSet, plateKeyQuiz:plateKeyQuiz,
     cardsFor:cardsFor, qsFor:qsFor, buildExam:buildExam, examPool:examPool, matchSet:matchSet,
-    diagramQuiz:diagramQuiz, diagramsFor:diagramsFor, platesFor:platesFor, plateQuiz:plateQuiz, schedule:schedule, newState:newState,
+    diagramQuiz:diagramQuiz, diagramsFor:diagramsFor, platesFor:platesFor, plateQuiz:plateQuiz, verdictFor:verdictFor, schedule:schedule, newState:newState,
     isDue:isDue, isMastered:isMastered, INTERVAL:INTERVAL, todayIndex:todayIndex};
   return;
 }
@@ -180,25 +189,6 @@ DB.qs    = DB.qs    || {};       /* questionId -> {seen,right,sure,sureRight} */
 DB.prefs = DB.prefs || {};
 function save(){ store.write(DB); }
 function cardState(id){ return DB.cards[id] || newState(); }
-
-/* ================================================================ theme */
-var SUN = '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.4 4.4l1.6 1.6M18 18l1.6 1.6M2.6 12h2.2M19.2 12h2.2M4.4 19.6l1.6-1.6M18 6l1.6-1.6"/>';
-var MOON = '<path d="M20 14.2A8.4 8.4 0 0 1 9.8 4 8.4 8.4 0 1 0 20 14.2z"/>';
-function applyTheme(t){
-  if(t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
-  else document.documentElement.removeAttribute("data-theme");
-  var dark = document.documentElement.getAttribute("data-theme") === "dark";
-  $("#themeIcon").innerHTML = dark ? SUN : MOON;
-}
-(function(){
-  var saved = DB.prefs.theme;
-  if(!saved && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) saved = "dark";
-  applyTheme(saved || "light");
-})();
-$("#themeBtn").addEventListener("click", function(){
-  var now = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-  DB.prefs.theme = now; save(); applyTheme(now);
-});
 
 /* ================================================================ unit selector */
 var sel = DB.prefs.unit || UNITS[0].id;
@@ -469,11 +459,7 @@ function renderResults(){
     byOrder[l.o].n++; if(l.right) byOrder[l.o].r++;
     if(l.sure === true){ sureN++; if(l.right) sureR++; }
   });
-  var verdict = p===100 ? "Perfect. Push into a harder mix — all units, application only."
-    : p>=85 ? "Strong. The misses below are the whole job now."
-    : p>=70 ? "Solid base, but the gaps are real. Work the misses, then retake."
-    : p>=50 ? "About half. Go back to the flashcards for this unit before testing again."
-    : "Start with the flashcards and the diagrams. Testing before the material is in place mostly measures frustration.";
+  var vd = verdictFor(p);
   var C = 2*Math.PI*58;
   var html =
     '<div class="card res">'+
@@ -481,7 +467,7 @@ function renderResults(){
         '<div class="ring"><svg width="132" height="132"><circle cx="66" cy="66" r="58" fill="none" stroke="var(--surface-3)" stroke-width="11"/>'+
           '<circle cx="66" cy="66" r="58" fill="none" stroke="var(--accent)" stroke-width="11" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-p/100))+'"/></svg>'+
           '<div class="val">'+p+'%<small>'+exam.score+' of '+n+'</small></div></div>'+
-        '<div class="verdict"><h3>'+verdict.split(".")[0]+'.</h3><p>'+verdict.split(". ").slice(1).join(". ")+'</p>'+
+        '<div class="verdict"><h3>'+vd.t+'</h3><p>'+vd.a+'</p>'+
           '<p style="margin-top:8px;font-size:12.5px;color:var(--muted)">Time: '+Math.floor(secs/60)+' min '+(secs%60)+' s</p></div>'+
       '</div>'+
       '<div class="breakdown">'+
@@ -682,7 +668,8 @@ function renderKeyQuiz(){
         '<div class="ring" style="margin:0 auto"><svg width="132" height="132"><circle cx="66" cy="66" r="58" fill="none" stroke="var(--surface-3)" stroke-width="11"/>'+
         '<circle cx="66" cy="66" r="58" fill="none" stroke="var(--accent)" stroke-width="11" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-k.score/k.qs.length))+'"/></svg>'+
         '<div class="val">'+pct(k.score,k.qs.length)+'%<small>'+k.score+' of '+k.qs.length+'</small></div></div>'+
-        '<p style="margin-top:12px;color:var(--ink-2)">'+esc(p.name)+'</p>'+
+        '<h3 style="margin-top:16px;font-size:21px">'+verdictFor(pct(k.score,k.qs.length)).t+'</h3>'+
+        '<p style="margin-top:8px;color:var(--ink-2)">'+esc(p.name)+'</p>'+
         '<div style="margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn primary" id="kAgain">Go again</button><button class="btn" id="kBack">Back to the plates</button></div>'+
       '</div>';
     wireView();
@@ -725,6 +712,7 @@ function renderPlateQuiz(){
         '<div class="ring" style="margin:0 auto"><svg width="132" height="132"><circle cx="66" cy="66" r="58" fill="none" stroke="var(--surface-3)" stroke-width="11"/>'+
         '<circle cx="66" cy="66" r="58" fill="none" stroke="var(--accent)" stroke-width="11" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-dg.pscore/dg.pq.length))+'"/></svg>'+
         '<div class="val">'+pct(dg.pscore,dg.pq.length)+'%<small>'+dg.pscore+' of '+dg.pq.length+'</small></div></div>'+
+        '<h3 style="margin-top:16px;font-size:21px">'+verdictFor(pct(dg.pscore,dg.pq.length)).t+'</h3>'+
         '<div style="margin-top:18px;display:flex;gap:10px;justify-content:center"><button class="btn primary" id="plAgain">Go again</button><button class="btn" id="plBack">Back to the plates</button></div>'+
       '</div>';
     wireView();
@@ -793,6 +781,7 @@ function quizMode(d){
         '<div class="ring" style="margin:0 auto"><svg width="132" height="132"><circle cx="66" cy="66" r="58" fill="none" stroke="var(--surface-3)" stroke-width="11"/>'+
         '<circle cx="66" cy="66" r="58" fill="none" stroke="var(--accent)" stroke-width="11" stroke-linecap="round" stroke-dasharray="'+(2*Math.PI*58)+'" stroke-dashoffset="'+(2*Math.PI*58*(1-dg.score/dg.quiz.length))+'"/></svg>'+
         '<div class="val">'+pct(dg.score,dg.quiz.length)+'%<small>'+dg.score+' of '+dg.quiz.length+'</small></div></div>'+
+        '<h3 style="margin-top:16px;font-size:21px">'+verdictFor(pct(dg.score,dg.quiz.length)).t+'</h3>'+
         '<div style="margin-top:18px"><button class="btn primary" id="dgRetry">Go again</button></div>'+
       '</div>';
     $("#dgRetry").addEventListener("click", function(){ dg.quiz = null; renderDiagrams(); });

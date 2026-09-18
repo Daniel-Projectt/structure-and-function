@@ -272,6 +272,16 @@ for (let run = 0; run < 50; run++) {
 ok(/data-v="plates"/.test(src), 'Plates view is reachable from the Diagrams tab');
 ok(/name the plate/i.test(src), 'plate recognition quiz exists');
 
+// ---------- 7c. verdicts ----------
+head('verdicts');
+ok(/GOAT/.test(A.verdictFor(100).t), '100% is the GOAT');
+ok(/him/.test(A.verdictFor(90).t) && /him/.test(A.verdictFor(85).t), '85-99 is "you\'re him"');
+ok(/Main character/.test(A.verdictFor(75).t) && /Main character/.test(A.verdictFor(70).t), '70-84 is main character');
+ok(/bot/.test(A.verdictFor(60).t) && /bot/.test(A.verdictFor(50).t), '50-69 is a bot');
+ok(/cheeks/.test(A.verdictFor(49).t) && /cheeks/.test(A.verdictFor(0).t), 'below 50 is cheeks');
+for (let p = 0; p <= 100; p++) ok(!!A.verdictFor(p).t && !!A.verdictFor(p).a, 'every score has a verdict and advice: ' + p);
+ok((src.match(/verdictFor\(/g) || []).length >= 5, 'verdict is used on every quiz result screen');
+
 // ---------- 8. markup ----------
 head('markup');
 ok((html.match(/<script>/g) || []).length === 1, 'a single script block');
@@ -280,7 +290,7 @@ ok((html.match(/<script>/g) || []).length === 1, 'a single script block');
   ok(html.includes('data-panel="' + mo + '"'), 'panel exists: ' + mo);
 });
 const refIds = [...new Set((src.match(/\$\("#([A-Za-z0-9_-]+)"/g) || []).map(s => s.slice(4, -1)))];
-const builtIn = ['studyRoot','examRoot','matchRoot','dgRoot','progRoot','unitSel','unitMeta','duePill','dueN','themeBtn','themeIcon'];
+const builtIn = ['studyRoot','examRoot','matchRoot','dgRoot','progRoot','unitSel','unitMeta','duePill','dueN'];
 builtIn.forEach(id => ok(html.includes('id="' + id + '"'), 'static element exists in the page: ' + id));
 ok(refIds.length > 20, 'the script wires up a real interface', refIds.length + ' ids referenced');
 ['svg','g','div','section','button','header','nav','main','select'].forEach(t => {
@@ -289,8 +299,8 @@ ok(refIds.length > 20, 'the script wires up a real interface', refIds.length + '
   ok(o === c, t + ' tags balanced', o + ' open vs ' + c + ' close');
 });
 ok(!/\uFFFD/.test(html), 'no broken characters');
-ok(/data-theme="dark"/.test(html), 'dark theme defined');
-ok(/prefers-color-scheme/.test(src) || /prefers-color-scheme/.test(html), 'follows the system theme on first visit');
+ok(!/data-theme|prefers-color-scheme|themeBtn/.test(html), 'single light design: no dark mode or theme toggle left behind');
+ok(!/#0f6b63|#3fc9b9|backdrop-filter/.test(html), 'no teal accent or glass effects left behind');
 ok(/localStorage/.test(src), 'progress is saved locally');
 ok(/try\s*\{[^}]*localStorage/.test(src), 'storage access is guarded against being blocked');
 ok(/aria-selected/.test(html) && /aria-label/.test(html), 'tabs and controls are labelled for screen readers');

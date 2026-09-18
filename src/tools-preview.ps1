@@ -1,14 +1,14 @@
 Add-Type -AssemblyName System.Drawing
 $D = 'C:\Users\DaniM\OneDrive\Desktop\Personal Projects\structure-and-function'
 
-$cBg     = [System.Drawing.Color]::FromArgb(244,246,247)
-$cInk    = [System.Drawing.Color]::FromArgb(16,22,27)
-$cMuted  = [System.Drawing.Color]::FromArgb(109,122,133)
-$cTeal   = [System.Drawing.Color]::FromArgb(15,107,99)
-$cTealSo = [System.Drawing.Color]::FromArgb(226,241,239)
-$cLine   = [System.Drawing.Color]::FromArgb(201,211,218)
-$cAmber  = [System.Drawing.Color]::FromArgb(154,91,6)
-$cAmbSo  = [System.Drawing.Color]::FromArgb(251,240,221)
+$cBg     = [System.Drawing.Color]::FromArgb(255,255,255)
+$cInk    = [System.Drawing.Color]::FromArgb(20,20,20)
+$cMuted  = [System.Drawing.Color]::FromArgb(111,111,111)
+$cTeal   = [System.Drawing.Color]::FromArgb(31,58,95)
+$cTealSo = [System.Drawing.Color]::FromArgb(238,242,247)
+$cLine   = [System.Drawing.Color]::FromArgb(201,201,196)
+$cAmber  = [System.Drawing.Color]::FromArgb(122,59,46)
+$cAmbSo  = [System.Drawing.Color]::FromArgb(246,236,234)
 
 function New-Canvas($w, $h) {
   $bmp = New-Object System.Drawing.Bitmap($w, $h)
@@ -49,7 +49,7 @@ $g.Clear($cBg)
 $g.FillRectangle((New-Object System.Drawing.SolidBrush($cTeal)), 0, 0, 1200, 10)
 Draw-Mark $g 150 300 78 $cTeal $cBg
 
-$fTitle = New-Object System.Drawing.Font('Segoe UI', 54, [System.Drawing.FontStyle]::Bold)
+$fTitle = New-Object System.Drawing.Font('Palatino Linotype', 56)
 $fEye   = New-Object System.Drawing.Font('Segoe UI', 15, [System.Drawing.FontStyle]::Bold)
 $fSub   = New-Object System.Drawing.Font('Segoe UI', 20)
 $fChip  = New-Object System.Drawing.Font('Segoe UI', 14, [System.Drawing.FontStyle]::Bold)
@@ -59,8 +59,8 @@ $g.DrawLine((New-Object System.Drawing.Pen($cLine, 1.5)), 270, 318, 1120, 318)
 $g.DrawString('Flashcards with spaced repetition. Practice exams built on', $fSub, (New-Object System.Drawing.SolidBrush($cMuted)), 268, 334)
 $g.DrawString('application questions, with instant feedback. Matching. Labeled diagrams.', $fSub, (New-Object System.Drawing.SolidBrush($cMuted)), 268, 366)
 $x = 270
-$x += (Draw-Chip $g $x 440 '252 cards' $fChip $cTeal $cTealSo) + 12
-$x += (Draw-Chip $g $x 440 '115 exam questions' $fChip $cTeal $cTealSo) + 12
+$x += (Draw-Chip $g $x 440 '440 cards' $fChip $cTeal $cTealSo) + 12
+$x += (Draw-Chip $g $x 440 '490 exam questions' $fChip $cTeal $cTealSo) + 12
 $x += (Draw-Chip $g $x 440 '83 application' $fChip $cAmber $cAmbSo) + 12
 $x += (Draw-Chip $g $x 440 '11 units' $fChip $cTeal $cTealSo) + 12
 $g.DrawString('Anatomy & physiology', (New-Object System.Drawing.Font('Segoe UI', 13)), (New-Object System.Drawing.SolidBrush($cMuted)), 270, 560)
