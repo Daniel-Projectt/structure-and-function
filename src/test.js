@@ -287,6 +287,9 @@ ok(new Set(A.VERDICTS.flatMap(v => v.t)).size === A.VERDICTS.flatMap(v => v.t).l
 });
 ok(tier(100).t.some(t => /GOAT/.test(t)) && tier(0).t.some(t => /cheeks/.test(t)), 'GOAT at the top, cheeks at the bottom');
 ok(A.REACT.ok.length >= 4 && A.REACT.no.length >= 4, 'reaction pools exist for right and wrong answers');
+const allLines = A.VERDICTS.flatMap(v => v.t).concat(A.REACT.ok, A.REACT.no).join(' | ');
+ok(!/sheesh|no crumbs/i.test(allLines), 'vetoed lines are gone (Sheesh, Ate and left no crumbs)', allLines);
+ok(/Behind the pack/.test(allLines), '"Behind the pack" is in');
 ok(/reaction\(right\)/.test(src), 'reactions are shown after exam answers');
 ok((src.match(/verdictFor\(/g) || []).length >= 5, 'verdict is used on every quiz result screen');
 

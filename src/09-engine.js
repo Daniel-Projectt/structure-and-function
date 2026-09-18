@@ -160,20 +160,20 @@ function diagramQuiz(dg){
    Edit the pools freely; anything with one entry is fine. */
 var VERDICTS = [
   {min:100, a:"Nothing left here. Push into a harder mix — all units, application only.",
-   t:["You’re the GOAT.","Absolute cinema.","Ate and left no crumbs.","+1000 aura.","We’re so back.","Goated, no cap."]},
+   t:["You’re the GOAT.","Absolute cinema.","+1000 aura.","We’re so back.","Goated, no cap.","You did that.","Built different.","Period.","On god, that’s clean.","Put on for the city."]},
   {min:85,  a:"Strong. The misses below are the whole job now.",
-   t:["You’re him.","Certified.","Locked in.","Big W.","Sheesh.","He’s him, chat."]},
+   t:["You’re him.","Certified.","Locked in.","Big W.","He’s him, chat.","Let him cook.","You slid.","Big dawg energy.","That’s tough.","Stay ready so you don’t have to get ready."]},
   {min:70,  a:"Solid base, but the gaps are real. Work the misses, then retake.",
-   t:["Main character energy.","Lowkey solid.","Not bad, twin.","Say less — almost there.","It’s giving competent."]},
+   t:["Main character energy.","Lowkey solid.","Not bad, twin.","Say less — almost there.","It’s giving competent.","You good, keep going.","Run it back.","Respectable.","We outside, but not all the way."]},
   {min:50,  a:"About half. Back to the flashcards for this unit before testing again.",
-   t:["You’re a bot.","Mid.","It’s giving NPC.","Bruh.","Crack a lackin’.","Chat, is this real?"]},
+   t:["You’re a bot.","Mid.","It’s giving NPC.","Bruh.","Crack a lackin’.","Chat, is this real?","Behind the pack.","You good?","Ain’t no way.","Get your weight up."]},
   {min:0,   a:"Start with the flashcards and the diagrams. Testing before the material is in place mostly measures frustration.",
-   t:["You’re cheeks.","Cooked.","It’s so over.","Pack it up.","Nah bro.","Down bad."]}
+   t:["You’re cheeks.","Cooked.","It’s so over.","Pack it up.","Nah bro.","Down bad.","In the trenches.","That’s wild.","Lock in, bro.","Somebody come get him."]}
 ];
 /* Short reactions after a single answer. Shown about a third of the time so they stay funny. */
 var REACT = {
-  ok:["W","say less","no cap","sheesh","easy","locked in","twin ❤","that’s him"],
-  no:["bruh","nah","crack a lackin’","L","not this one, twin","cooked","chat…","it’s giving guess"]
+  ok:["W","say less","no cap","easy","locked in","twin ❤","that’s him","period","on god","you did that","clean"],
+  no:["bruh","nah","crack a lackin’","L","not this one, twin","cooked","chat…","it’s giving guess","ain’t no way","lock in","behind the pack"]
 };
 function verdictFor(p){
   for(var i=0;i<VERDICTS.length;i++){
