@@ -43,7 +43,7 @@ const cardIds = new Set();
 A.ALL_CARDS.forEach(c => {
   ok(!cardIds.has(c.id), 'card id unique: ' + c.id); cardIds.add(c.id);
   ok(!!c.f && c.f.trim().length > 2, 'card has a front: ' + c.id);
-  ok(!!c.b && c.b.trim().length > 8, 'card has a back: ' + c.id);
+  ok(!!c.b && c.b.trim().length > (c.gen ? 1 : 8), 'card has a back: ' + c.id, c.b);   // identification answers can be one word ("Head")
   ok(!!c.why && c.why.trim().length > 12, 'card explains why it matters: ' + c.id, c.f);
   ok(!/\bTODO\b|\bTBD\b|lorem/i.test(c.f + c.b + c.why), 'no placeholder text: ' + c.id);
 });
@@ -91,7 +91,8 @@ const recOnly = A.buildExam({ unit: 'all', scope: 'all', order: 1, n: 40 });
 ok(recOnly.every(q => q.o === 1), 'recall-only filter returns only recall questions');
 const only = A.buildExam({ unit: 'all', scope: 'all', order: 0, n: 10, only: ['cell-q1', 'bone-q2'] });
 ok(only.length === 2 && only.every(q => ['cell-q1', 'bone-q2'].includes(q.id)), 'the "missed questions" filter works', only.map(q => q.id).join(','));
-ok(A.buildExam({ unit: 'org', scope: 'unit', order: 0, n: 500 }).length === A.qsFor('org').length, 'asking for more questions than exist returns all of them');
+ok(A.buildExam({ unit: 'org', scope: 'unit', order: 0, n: 500 }).length === A.examPool({ unit: 'org', scope: 'unit', order: 0 }).length, 'asking for more questions than exist returns all of them');
+ok(A.buildExam({ unit: 'org', scope: 'unit', order: 2, n: 500 }).length === A.qsFor('org').filter(q => q.o === 2).length, 'application-only with a huge n returns every application question');
 // shuffling actually varies the order
 const first = A.buildExam({ unit: 'all', scope: 'all', order: 0, n: 20 }).map(q => q.id).join();
 let differs = false;
@@ -164,6 +165,66 @@ A.DIAGRAMS.forEach(d => {
   });
 });
 
+// ---------- 6b. structure sets ----------
+head('structure sets (regions, bones, muscles...)');
+ok(A.MATCHSETS.length >= 18, 'at least eighteen structure sets', 'got ' + A.MATCHSETS.length);
+const setIds = new Set();
+let pairCount = 0;
+A.MATCHSETS.forEach(s => {
+  ok(!setIds.has(s.id), 'set id unique: ' + s.id); setIds.add(s.id);
+  ok(!!A.UNITS.find(u => u.id === s.unit), 'set belongs to a real unit: ' + s.id, s.unit);
+  ok(!!s.name && !!s.left && !!s.right, 'set has a name and column titles: ' + s.id);
+  ok(s.pairs.length >= 9, s.id + ' has at least nine pairs', 'got ' + s.pairs.length);
+  pairCount += s.pairs.length;
+  const lefts = s.pairs.map(p => p[0].toLowerCase());
+  ok(new Set(lefts).size === lefts.length, s.id + ': left-hand terms unique');
+  s.pairs.forEach(p => ok(p.length === 2 && p[0].trim() && p[1].trim(), s.id + ': pair complete', JSON.stringify(p)));
+  if (s.drill) {
+    ok(!!s.why && s.why.length > 20, s.id + ' (drill) explains why it matters');
+    const rights = s.pairs.map(p => p[1]);
+    ok(new Set(rights).size === rights.length, s.id + ' (drill): right-hand texts unique, so identification questions have one answer');
+  }
+  const r = A.matchFromSet(s.id, 8);
+  ok(r.length === 8, s.id + ' fills a match round', 'got ' + r.length);
+  ok(new Set(r.map(x => x.def)).size === r.length && new Set(r.map(x => x.id)).size === r.length, s.id + ' round has unique tiles');
+});
+console.log('  ' + pairCount + ' pairs across ' + A.MATCHSETS.length + ' sets');
+A.UNITS.forEach(u => ok(A.matchSetsFor(u.id).length >= 1, 'every unit has at least one structure set: ' + u.id));
+const drillCards = A.ALL_CARDS.filter(c => c.gen);
+ok(drillCards.length >= 150, 'drill sets became flashcards', 'got ' + drillCards.length);
+ok(drillCards.every(c => c.f && c.b && c.why), 'generated cards are complete');
+ok(A.GEN_QS.length >= 300, 'identification questions generated', 'got ' + A.GEN_QS.length);
+A.GEN_QS.forEach(q => {
+  ok(q.a.filter(a => a.ok).length === 1, 'identification question has one right answer: ' + q.id);
+  ok(q.a.filter(a => !a.ok).length >= 3, 'identification question has at least three wrong candidates: ' + q.id);
+  ok(new Set(q.a.map(a => a.t)).size === q.a.length, 'identification candidates distinct: ' + q.id);
+  ok(q.a.every(a => a.w), 'every identification option explains itself: ' + q.id);
+  ok(q.o === 1 && q.gen === true, 'identification questions are tagged recall + generated: ' + q.id);
+});
+const genIds = new Set(A.GEN_QS.map(q => q.id));
+ok(genIds.size === A.GEN_QS.length, 'identification question ids unique');
+ok(!A.GEN_QS.some(q => qIds.has(q.id)), 'identification ids never collide with written questions');
+
+head('exam builder with identification questions');
+for (let run = 0; run < 100; run++) {
+  const mixed = A.buildExam({ unit: 'bone', scope: 'unit', order: 0, n: 12 });
+  ok(mixed.length === 12, 'mixed exam fills to size', 'got ' + mixed.length);
+  const g = mixed.filter(q => q.gen).length;
+  ok(g <= 4, 'identification is at most a third of a mixed exam', g + ' of 12');
+  ok(g >= 1, 'a mixed exam includes some identification when the unit has it', g + ' of 12');
+  mixed.forEach(q => ok(q.opts.length === 4 && q.opts.filter(o => o.ok).length === 1, 'materialized question has four options, one right', q.s));
+  const idOnly = A.buildExam({ unit: 'all', scope: 'all', order: 3, n: 40 });
+  ok(idOnly.length === 40 && idOnly.every(q => q.gen), 'identification-only exam is all identification');
+  const app = A.buildExam({ unit: 'all', scope: 'all', order: 2, n: 20 });
+  ok(app.every(q => !q.gen && q.o === 2), 'application-only never includes identification');
+}
+ok(A.buildExam({ unit: 'chem', scope: 'unit', order: 3, n: 10 }).length === 0, 'a unit with no drill set yields no identification exam (chem)');
+const stems = new Set();
+for (let run = 0; run < 30; run++) A.buildExam({ unit: 'mus', scope: 'unit', order: 3, n: 5 }).forEach(q => stems.add(q.opts.map(o => o.t).join('|')));
+ok(stems.size > 30, 'identification distractors are redrawn each time', stems.size + ' distinct option sets');
+ok(/data-o="3"/.test(src) && /Identification only/.test(src), 'exam setup offers identification-only');
+ok(/id="mSet"/.test(src), 'match tab has a set picker');
+
 // ---------- 7b. plates ----------
 head('plates');
 const IMG = 'C:/Users/DaniM/OneDrive/Desktop/Personal Projects/structure-and-function/';
@@ -176,11 +237,23 @@ A.PLATES.forEach(p => {
   ok(fs.existsSync(IMG + p.file), 'plate image file exists on disk: ' + p.file);
   if (fs.existsSync(IMG + p.file)) {
     const b = fs.readFileSync(IMG + p.file);
-    ok(b.length > 5000 && b.slice(1, 4).toString() === 'PNG', 'plate image is a real PNG: ' + p.file, b.length + ' bytes');
+    const isPng = b.slice(1, 4).toString() === 'PNG', isJpg = b[0] === 0xFF && b[1] === 0xD8;
+    ok(b.length > 5000 && (isPng || isJpg), 'plate image is a real PNG or JPEG: ' + p.file, b.length + ' bytes');
   }
-  ok(/public domain/i.test(p.credit), 'plate is credited and public domain: ' + p.id, p.credit);
+  ok(/public domain|CC BY/i.test(p.credit), 'plate is credited with its license: ' + p.id, p.credit);
   ok(p.caption.length > 60, 'plate has a real caption: ' + p.id);
-  ok(p.find.length >= 3, 'plate lists things to find: ' + p.id);
+  ok((p.find && p.find.length >= 3) || (p.key && p.key.length >= 6), 'plate lists things to find or has a numbered key: ' + p.id);
+  if (p.key) {
+    ok(new Set(p.key.map(k => k.n)).size === p.key.length, p.id + ': key numbers unique');
+    ok(new Set(p.key.map(k => k.label)).size === p.key.length, p.id + ': key labels unique');
+    ok(p.key.every(k => Number.isInteger(k.n) && k.n > 0 && k.label), p.id + ': key entries complete');
+    for (let run = 0; run < 20; run++) {
+      const kq = A.plateKeyQuiz(p);
+      ok(kq.length === p.key.length, p.id + ': number quiz covers every number');
+      kq.forEach(x => ok(x.opts.length === 4 && x.opts.filter(o => o.ok).length === 1 && x.opts.find(o => o.ok).t === x.label && new Set(x.opts.map(o => o.t)).size === 4,
+        p.id + ': number quiz question well formed', x.n));
+    }
+  }
   ok(!/\bTODO\b|lorem/i.test(p.caption), 'no placeholder in caption: ' + p.id);
 });
 ['skin','bone','jnt','mus','nrv','sen'].forEach(u => ok(A.platesFor(u).length >= 1, 'unit has a plate: ' + u));

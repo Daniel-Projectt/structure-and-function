@@ -12,6 +12,7 @@ cat "$D/src/01-head.html" \
     "$D/src/07-data-nerve-sense.js" \
     "$D/src/08-data-diagrams.js" \
     "$D/src/08b-data-plates.js" \
+    "$D/src/08c-data-match.js" \
     "$D/src/09-engine.js" \
     "$D/src/10-tail.html" > "$D/index.html"
 echo "built index.html: $(wc -c < "$D/index.html") bytes"

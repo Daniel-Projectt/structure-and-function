@@ -18,8 +18,36 @@ UNITS.forEach(function(u){
   u.cards.forEach(function(c){ ALL_CARDS.push({id:c.id, unit:u.id, unitName:u.short, f:c.f, b:c.b, why:c.why||""}); });
   u.qs.forEach(function(q){ ALL_QS.push({id:q.id, unit:u.id, unitName:u.short, o:q.o, v:q.v||"", s:q.s, a:q.a, e:q.e}); });
 });
+/* Structure sets (regions, bones, muscles...). Sets marked drill:true also
+   become flashcards and identification questions. Identification questions
+   keep every other pair as a candidate wrong answer; three are drawn when the
+   exam is built, so the same question reads differently each time.         */
+var MATCHSETS = G.__MATCHSETS || [], GEN_QS = [];
+MATCHSETS.forEach(function(s){
+  var u = unitById(s.unit); if(!u || !s.drill) return;
+  s.pairs.forEach(function(p, i){
+    ALL_CARDS.push({id:s.id+"-c"+(i+1), unit:u.id, unitName:u.short, f:p[0], b:p[1], why:s.why || "", gen:true});
+    var otherF = s.pairs.filter(function(o){ return o[1] !== p[1]; }).map(function(o){ return {t:o[1], ok:false, w:"That is the "+s.left.toLowerCase()+" <b>"+o[0]+"</b>."}; });
+    var otherR = s.pairs.filter(function(o){ return o[0] !== p[0]; }).map(function(o){ return {t:o[0], ok:false, w:o[0]+": "+o[1]+"."}; });
+    GEN_QS.push({id:s.id+"-qf"+(i+1), unit:u.id, unitName:u.short, o:1, gen:true, v:"", e:s.why || "",
+      s:"<b>"+esc(p[0])+"</b> — which "+s.right.toLowerCase()+" is correct?",
+      a:[{t:p[1], ok:true, w:p[0]+": "+p[1]+"."}].concat(otherF)});
+    GEN_QS.push({id:s.id+"-qr"+(i+1), unit:u.id, unitName:u.short, o:1, gen:true, v:"", e:s.why || "",
+      s:"Which "+s.left.toLowerCase()+" matches: <b>"+esc(p[1])+"</b>?",
+      a:[{t:p[0], ok:true, w:p[0]+": "+p[1]+"."}].concat(otherR)});
+  });
+});
 function cardsFor(sel){ return sel==="all" ? ALL_CARDS : ALL_CARDS.filter(function(c){ return c.unit===sel; }); }
 function qsFor(sel){ return sel==="all" ? ALL_QS : ALL_QS.filter(function(q){ return q.unit===sel; }); }
+function genFor(sel){ return sel==="all" ? GEN_QS : GEN_QS.filter(function(q){ return q.unit===sel; }); }
+function matchSetsFor(sel){ return sel==="all" ? MATCHSETS : MATCHSETS.filter(function(s){ return s.unit===sel; }); }
+function setById(id){ for(var i=0;i<MATCHSETS.length;i++){ if(MATCHSETS[i].id===id) return MATCHSETS[i]; } return null; }
+function matchFromSet(id, n){
+  var s = setById(id); if(!s) return [];
+  var seen = {}, items = [];
+  s.pairs.forEach(function(p, i){ if(seen[p[1]]) return; seen[p[1]] = 1; items.push({id:s.id+"-"+i, term:p[0], def:p[1]}); });
+  return pick(items, Math.min(n || 8, items.length));
+}
 
 /* ================================================================ scheduling */
 /* A Leitner box system. Box 0 is new or just failed; box 5 is long-term.
@@ -43,20 +71,37 @@ function isDue(st, day){ return !st || st.seen === 0 || st.d <= day; }
 function isMastered(st){ return !!st && st.b >= 4; }
 
 /* ================================================================ exam building */
+/* order: 0 mixed (written + identification), 1 recall (written recall +
+   identification), 2 application only, 3 identification only.             */
 function examPool(opts){
-  var pool = qsFor(opts.scope === "all" ? "all" : opts.unit);
-  if(opts.order === 2) pool = pool.filter(function(q){ return q.o === 2; });
-  else if(opts.order === 1) pool = pool.filter(function(q){ return q.o === 1; });
+  var scope = opts.scope === "all" ? "all" : opts.unit;
+  var hand = qsFor(scope), gen = genFor(scope), pool;
+  if(opts.order === 2) pool = hand.filter(function(q){ return q.o === 2; });
+  else if(opts.order === 1) pool = hand.filter(function(q){ return q.o === 1; }).concat(gen);
+  else if(opts.order === 3) pool = gen;
+  else pool = hand.concat(gen);
   if(opts.only && opts.only.length) pool = pool.filter(function(q){ return opts.only.indexOf(q.id) >= 0; });
   return pool;
 }
+function materialize(q){
+  var a = q.a.map(function(x){ return {t:x.t, ok:!!x.ok, w:x.w || ""}; });
+  if(q.gen){ a = a.filter(function(x){ return x.ok; }).concat(pick(a.filter(function(x){ return !x.ok; }), 3)); }
+  return {id:q.id, unit:q.unit, unitName:q.unitName, o:q.o, gen:!!q.gen, v:q.v, s:q.s, e:q.e, opts:shuffle(a)};
+}
 function buildExam(opts){
-  var pool = examPool(opts);
+  var pool = examPool(opts), n = opts.n || 10;
   if(!pool.length) return [];
-  return pick(pool, Math.min(opts.n || 10, pool.length)).map(function(q){
-    return {id:q.id, unit:q.unit, unitName:q.unitName, o:q.o, v:q.v, s:q.s, e:q.e,
-            opts:shuffle(q.a.map(function(a){ return {t:a.t, ok:!!a.ok, w:a.w || ""}; }))};
-  });
+  var picks;
+  if(opts.order === 0 && !(opts.only && opts.only.length)){
+    /* a mixed exam is mostly written questions; identification fills at most a third */
+    var hand = pool.filter(function(q){ return !q.gen; }), gen = pool.filter(function(q){ return q.gen; });
+    var nGen = Math.min(gen.length, Math.floor(n / 3)), nHand = Math.min(hand.length, n - nGen);
+    nGen = Math.min(gen.length, n - nHand);
+    picks = shuffle(pick(hand, nHand).concat(pick(gen, nGen)));
+  } else {
+    picks = pick(pool, Math.min(n, pool.length));
+  }
+  return picks.map(materialize);
 }
 
 /* ================================================================ matching sets */
@@ -94,6 +139,15 @@ function plateQuiz(list){
             opts:shuffle([{t:p.name, ok:true}].concat(others.map(function(x){ return {t:x.name, ok:false}; })))};
   });
 }
+/* A numbered plate: "what is structure 14?" with the other numbers as wrong answers. */
+function plateKeyQuiz(p){
+  if(!p.key) return [];
+  return shuffle(p.key).map(function(k){
+    var others = pick(p.key.filter(function(x){ return x.label !== k.label; }), 3);
+    return {n:k.n, label:k.label, note:k.note || "",
+            opts:shuffle([{t:k.label, ok:true}].concat(others.map(function(x){ return {t:x.label, ok:false}; })))};
+  });
+}
 function diagramQuiz(dg){
   return shuffle(dg.pins).map(function(p){
     var others = pick(dg.pins.filter(function(x){ return x.n !== p.n; }), 3);
@@ -105,6 +159,7 @@ function diagramQuiz(dg){
 /* ---- tests run without a browser ---- */
 if(typeof window === "undefined"){
   module.exports = {UNITS:UNITS, DIAGRAMS:DIAGRAMS, PLATES:PLATES, ALL_CARDS:ALL_CARDS, ALL_QS:ALL_QS,
+    MATCHSETS:MATCHSETS, GEN_QS:GEN_QS, genFor:genFor, matchSetsFor:matchSetsFor, matchFromSet:matchFromSet, plateKeyQuiz:plateKeyQuiz,
     cardsFor:cardsFor, qsFor:qsFor, buildExam:buildExam, examPool:examPool, matchSet:matchSet,
     diagramQuiz:diagramQuiz, diagramsFor:diagramsFor, platesFor:platesFor, plateQuiz:plateQuiz, schedule:schedule, newState:newState,
     isDue:isDue, isMastered:isMastered, INTERVAL:INTERVAL, todayIndex:todayIndex};
@@ -158,10 +213,10 @@ if(sel !== "all" && !unitById(sel)) sel = UNITS[0].id;
 })();
 function unitLabel(){ return sel === "all" ? "All units" : unitById(sel).name; }
 function updateMeta(){
-  var c = cardsFor(sel).length, q = qsFor(sel).length, d = diagramsFor(sel).length, p = platesFor(sel).length;
+  var c = cardsFor(sel).length, q = qsFor(sel).length, g = genFor(sel).length, d = diagramsFor(sel).length, p = platesFor(sel).length;
   var app = qsFor(sel).filter(function(x){ return x.o === 2; }).length;
-  $("#unitMeta").textContent = c + " cards · " + q + " questions (" + app + " application) · " +
-    d + " diagram" + (d===1?"":"s") + (p ? " · " + p + " plate" + (p===1?"":"s") : "");
+  $("#unitMeta").textContent = c + " cards · " + q + " questions (" + app + " application)" + (g ? " + " + g + " identification" : "") +
+    " · " + d + " diagram" + (d===1?"":"s") + (p ? " · " + p + " plate" + (p===1?"":"s") : "");
 }
 function updateDue(){
   var day = todayIndex();
@@ -284,7 +339,8 @@ function renderExamSetup(){
         '<button type="button" data-o="0" aria-pressed="'+(examCfg.order===0)+'">Mixed</button>'+
         '<button type="button" data-o="2" aria-pressed="'+(examCfg.order===2)+'">Application only</button>'+
         '<button type="button" data-o="1" aria-pressed="'+(examCfg.order===1)+'">Recall only</button>'+
-      '</div><p class="note">Application questions give you a situation and make you use the material, rather than asking you to repeat it. These are the second-order questions your lecture exams lean on.</p></div>'+
+        '<button type="button" data-o="3" aria-pressed="'+(examCfg.order===3)+'">Identification only</button>'+
+      '</div><p class="note">Application questions give you a situation and make you use the material — the second-order questions your lecture exams lean on. Identification questions are the structure half: name the bone, the region, the muscle, the tissue.</p></div>'+
       '<div class="grp"><span class="glab">Draw from</span><div class="seg" id="segS">'+
         '<button type="button" data-s="unit" aria-pressed="'+(examCfg.scope==="unit")+'">This unit</button>'+
         '<button type="button" data-s="all" aria-pressed="'+(examCfg.scope==="all")+'">All units</button>'+
@@ -329,7 +385,7 @@ function renderExam(){
     '<div class="dots" id="dots"></div>'+
     '<div class="card qbox">'+
       '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+
-        '<span class="tag '+(q.o===2?'apply':'recall')+'">'+(q.o===2?'Application':'Recall')+'</span>'+
+        '<span class="tag '+(q.o===2?'apply':'recall')+'">'+(q.gen ? 'Identification' : (q.o===2?'Application':'Recall'))+'</span>'+
         '<span class="tag">'+esc(q.unitName)+'</span>'+
       '</div>'+
       '<p class="stem">'+(q.v ? '<span class="vig">'+q.v+'</span>' : '')+q.s+'</p>'+
@@ -463,29 +519,43 @@ function brow(name, r, n){
 }
 
 /* ================================================================ 3. MATCH */
-var match = null;
+var match = null, matchChoice = DB.prefs.matchSet || null;
 function newMatch(){
-  var items = matchSet(sel, 8);
-  match = {items:items, sel:null, done:0, miss:0};
+  var sets = matchSetsFor(sel);
+  if(matchChoice !== "defs" && !sets.filter(function(s){ return s.id === matchChoice; }).length){
+    matchChoice = sets.length ? sets[0].id : "defs";
+  }
+  var s = matchChoice === "defs" ? null : setById(matchChoice);
+  var items = s ? matchFromSet(s.id, 8) : matchSet(sel, 8);
+  match = {items:items, sel:null, done:0, miss:0, left:s ? s.left : "Term", right:s ? s.right : "Definition"};
+  DB.prefs.matchSet = matchChoice; save();
   renderMatch();
 }
 function renderMatch(){
   var root = $("#matchRoot");
-  if(!match || !match.items.length){
-    if(!match) newMatch();
-    if(!match.items.length){ root.innerHTML = '<div class="empty">No short definitions in this unit to match. Try another unit.</div>'; return; }
+  if(!match) newMatch();
+  var m = match, sets = matchSetsFor(sel);
+  var picker = '<select id="mSet" aria-label="What to match">'+
+    sets.map(function(s){ return '<option value="'+s.id+'"'+(s.id===matchChoice?' selected':'')+'>'+esc(s.name)+'</option>'; }).join("")+
+    '<option value="defs"'+(matchChoice==="defs"?' selected':'')+'>Terms and definitions from the cards</option></select>';
+  if(!m.items.length){
+    root.innerHTML = '<div class="studyhead">'+picker+'</div><div class="empty">Nothing to match here. Pick another set or unit.</div>';
+    $("#mSet").addEventListener("change", function(){ matchChoice = this.value; newMatch(); });
+    return;
   }
-  var m = match;
   root.innerHTML =
-    '<div class="studyhead">'+
-      '<div class="chips"><span>Matched <b>'+m.done+' of '+m.items.length+'</b></span><span>Misses <b>'+m.miss+'</b></span></div>'+
-      '<button class="btn sm" id="mNew">New round</button>'+
+    '<div class="studyhead">'+picker+
+      '<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">'+
+        '<div class="chips"><span>Matched <b>'+m.done+' of '+m.items.length+'</b></span><span>Misses <b>'+m.miss+'</b></span></div>'+
+        '<button class="btn sm" id="mNew">New round</button>'+
+      '</div>'+
     '</div>'+
     (m.done === m.items.length ? '<div class="banner">Round complete — '+(m.miss===0?'a perfect run.':m.miss+(m.miss===1?' miss.':' misses.'))+'</div>' : '')+
     '<div class="mgrid">'+
-      '<div class="mcol"><h3>Term</h3><div class="tiles" id="mL"></div></div>'+
-      '<div class="mcol"><h3>Definition</h3><div class="tiles" id="mR"></div></div>'+
+      '<div class="mcol"><h3>'+esc(m.left)+'</h3><div class="tiles" id="mL"></div></div>'+
+      '<div class="mcol"><h3>'+esc(m.right)+'</h3><div class="tiles" id="mR"></div></div>'+
     '</div>';
+  $("#mSet").addEventListener("change", function(){ matchChoice = this.value; newMatch(); });
   $("#mNew").addEventListener("click", newMatch);
   var L = $("#mL"), R = $("#mR");
   shuffle(m.items).forEach(function(it){ tile(L, it, "L", it.term, "tile term"); });
@@ -530,7 +600,7 @@ function wireView(){
   $("#dgView").addEventListener("click", function(e){
     var b = e.target.closest ? e.target.closest("button[data-v]") : null;
     if(!b) return;
-    dg.view = b.getAttribute("data-v"); dg.pq = null; dg.quiz = null; dg.shown = {}; renderDiagrams();
+    dg.view = b.getAttribute("data-v"); dg.pq = null; dg.kq = null; dg.quiz = null; dg.shown = {}; renderDiagrams();
   });
 }
 function renderDiagrams(){
@@ -577,16 +647,18 @@ function renderPlates(plates){
     wireView(); return;
   }
   if(dg.pq){ renderPlateQuiz(); return; }
+  if(dg.kq){ renderKeyQuiz(); return; }
   root.innerHTML =
     '<div class="studyhead">'+viewToggle()+
       '<button class="btn sm primary" id="plQuiz">Quiz: name the plate</button>'+
     '</div>'+
-    '<p class="hintbar" style="margin:0 0 16px">Real anatomical plates, in the public domain. Read the caption, then find each item in the list before you move on.</p>'+
+    '<p class="hintbar" style="margin:0 0 16px">Real anatomical figures, in the public domain. Read the caption, then find each item in the list before you move on.</p>'+
     '<div class="plates">'+plates.map(function(p){
-      return '<article class="plate card">'+
+      return '<article class="plate card'+(p.wide ? ' wide' : '')+'">'+
         '<div class="plimg"><img src="'+p.file+'" alt="'+esc(p.name)+'" loading="lazy"></div>'+
         '<div class="pltext"><h3>'+esc(p.name)+'</h3><p class="cap">'+p.caption+'</p>'+
-        '<div class="find">'+p.find.map(function(f){ return '<span class="chip">'+esc(f)+'</span>'; }).join("")+'</div>'+
+        (p.find ? '<div class="find">'+p.find.map(function(f){ return '<span class="chip">'+esc(f)+'</span>'; }).join("")+'</div>' : '')+
+        (p.key ? '<div style="margin-top:14px"><button class="btn sm primary" data-key="'+p.id+'">Quiz me on the numbers ('+p.key.length+')</button></div>' : '')+
         '<p class="credit">'+esc(p.credit)+'</p></div>'+
       '</article>';
     }).join("")+'</div>';
@@ -594,6 +666,55 @@ function renderPlates(plates){
   $("#plQuiz").addEventListener("click", function(){
     dg.pq = plateQuiz(plates.length >= 4 ? plates : PLATES); dg.pqi = 0; dg.pscore = 0; renderPlates(plates);
   });
+  $$("button[data-key]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var p = PLATES.filter(function(x){ return x.id === b.getAttribute("data-key"); })[0];
+      dg.kq = {plate:p, qs:plateKeyQuiz(p), i:0, score:0}; renderDiagrams();
+    });
+  });
+}
+function renderKeyQuiz(){
+  var root = $("#dgRoot"), k = dg.kq, p = k.plate;
+  if(k.i >= k.qs.length){
+    var C = 2*Math.PI*58;
+    root.innerHTML = '<div class="studyhead">'+viewToggle()+'</div>'+
+      '<div class="card res" style="text-align:center">'+
+        '<div class="ring" style="margin:0 auto"><svg width="132" height="132"><circle cx="66" cy="66" r="58" fill="none" stroke="var(--surface-3)" stroke-width="11"/>'+
+        '<circle cx="66" cy="66" r="58" fill="none" stroke="var(--accent)" stroke-width="11" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-k.score/k.qs.length))+'"/></svg>'+
+        '<div class="val">'+pct(k.score,k.qs.length)+'%<small>'+k.score+' of '+k.qs.length+'</small></div></div>'+
+        '<p style="margin-top:12px;color:var(--ink-2)">'+esc(p.name)+'</p>'+
+        '<div style="margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn primary" id="kAgain">Go again</button><button class="btn" id="kBack">Back to the plates</button></div>'+
+      '</div>';
+    wireView();
+    $("#kAgain").addEventListener("click", function(){ dg.kq = {plate:p, qs:plateKeyQuiz(p), i:0, score:0}; renderDiagrams(); });
+    $("#kBack").addEventListener("click", function(){ dg.kq = null; renderDiagrams(); });
+    return;
+  }
+  var q = k.qs[k.i];
+  root.innerHTML = '<div class="studyhead">'+viewToggle()+'<span class="qcount">'+esc(p.name)+' · '+(k.i+1)+' of '+k.qs.length+'</span></div>'+
+    '<div class="card qbox">'+
+      '<div class="plimg quiz key"><img src="'+p.file+'" alt="Numbered figure"></div>'+
+      '<p class="stem" style="margin-top:18px">What is structure number <b style="font-size:1.25em;color:var(--accent)">'+q.n+'</b>?</p>'+
+      '<div class="opts" id="kOpts"></div><div id="kFb"></div>'+
+      '<div class="qfoot"><button class="btn ghost sm" id="kStop">Stop</button><button class="btn primary" id="kNext" hidden>Next</button></div>'+
+    '</div>';
+  wireView();
+  var wrap = $("#kOpts");
+  q.opts.forEach(function(o, i){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "opt";
+    b.innerHTML = '<span class="k">'+String.fromCharCode(65+i)+'</span><span>'+esc(o.t)+'</span>';
+    b.addEventListener("click", function(){
+      if(b.disabled) return;
+      $$("#kOpts .opt").forEach(function(x, j){ x.disabled = true; if(q.opts[j].ok) x.classList.add("correct"); });
+      if(!o.ok) b.classList.add("wrong"); else k.score++;
+      $("#kFb").innerHTML = '<div class="fb '+(o.ok?"good":"bad")+'"><span class="lead">'+(o.ok?"Correct":"Not this one")+'</span>Number '+q.n+' is the <b>'+esc(q.label)+'</b>'+(q.note ? ' — '+esc(q.note) : '')+'.</div>';
+      var nb = $("#kNext"); nb.hidden = false; nb.focus();
+    });
+    wrap.appendChild(b);
+  });
+  $("#kNext").addEventListener("click", function(){ k.i++; renderDiagrams(); });
+  $("#kStop").addEventListener("click", function(){ dg.kq = null; renderDiagrams(); });
 }
 function renderPlateQuiz(){
   var root = $("#dgRoot");

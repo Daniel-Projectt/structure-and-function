@@ -273,6 +273,11 @@ kbd{font:inherit;font-size:11px;font-family:var(--mono);border:1px solid var(--l
 .plimg img{max-width:100%;max-height:340px;height:auto;display:block}
 .plimg.quiz{border:1px solid var(--line);border-radius:9px;border-right:1px solid var(--line);max-width:420px;margin:0 auto}
 .plimg.quiz img{max-height:300px}
+.plimg.quiz.key{max-width:100%}
+.plimg.quiz.key img{max-height:min(78vh,900px)}
+.plate.wide{grid-template-columns:1fr}
+.plate.wide .plimg{border-right:0;border-bottom:1px solid var(--line)}
+.plate.wide .plimg img{max-height:none}
 .pltext{padding:18px 20px}
 .pltext h3{font-size:16px;margin-bottom:8px}
 .pltext .cap{font-size:14px;line-height:1.55;color:var(--ink-2)}
@@ -2213,6 +2218,242 @@ PLATES.push({id:"pl-ear", unit:"sen", file:"img/gray923-cochlea.png", name:"The 
   caption:"The bony labyrinth opened from above. The coiled cochlea is at the left with its two fluid channels marked in red (scala vestibuli and scala tympani), meeting at the apex at the helicotrema. The vestibule and the openings of the semicircular canals are to the right.",
   find:["Cochlea","Scala vestibuli","Scala tympani","Helicotrema","Vestibule","Semicircular canal"]});
 
+/* ---- whole-body figures: regions, skeleton, muscles ---- */
+var LOH = "Mariana Ruiz Villarreal (LadyofHats), via Wikimedia Commons. Public domain.";
+
+PLATES.push({id:"pl-regions", unit:"org", file:"img/regions-openstax.jpg", name:"Regions of the body, anterior and posterior", wide:true,
+  credit:"OpenStax, Anatomy and Physiology, via Wikimedia Commons. CC BY 4.0.",
+  caption:"Every region carries a Latin noun and an adjective form in parentheses — the adjective is the one used in clinical notes (an <i>antecubital</i> vein, a <i>popliteal</i> pulse). Read the anterior view top to bottom, then the posterior, then test yourself with the Body regions set in Match.",
+  find:["Antecubital (front of elbow)","Antebrachial (forearm)","Carpal (wrist)","Inguinal (groin)","Crural (leg)","Popliteal (back of knee)","Sural (calf)","Calcaneal (heel)","Acromial (shoulder)","Olecranal (back of elbow)"]});
+
+PLATES.push({id:"pl-skel-num", unit:"bone", file:"img/skeleton-front-numbered.png", name:"The skeleton, numbered", credit:LOH,
+  caption:"Red numbers point to single bones; blue numbers point to groups. Cover the list and name each number before you check. Then use the quiz — it asks the numbers in random order.",
+  key:[
+   {n:1,  label:"Vertebral (spinal) column", note:"the whole stack, cervical through coccyx"},
+   {n:2,  label:"Cervical vertebrae", note:"seven, in the neck"},
+   {n:3,  label:"Thoracic vertebrae", note:"twelve, each carrying a pair of ribs"},
+   {n:4,  label:"Lumbar vertebrae", note:"five, the largest"},
+   {n:5,  label:"Sacrum", note:"five fused vertebrae wedged between the hip bones"},
+   {n:6,  label:"Coccyx", note:"the tailbone"},
+   {n:7,  label:"Skull", note:"cranium plus mandible"},
+   {n:8,  label:"Cranium", note:"the braincase"},
+   {n:9,  label:"Mandible", note:"the only movable bone of the skull"},
+   {n:10, label:"Clavicle", note:"the collarbone; braces the shoulder"},
+   {n:11, label:"Manubrium", note:"the upper part of the sternum"},
+   {n:12, label:"Sternum (body)", note:"the breastbone"},
+   {n:13, label:"Scapula", note:"the shoulder blade, seen here past the ribs"},
+   {n:14, label:"Humerus", note:"the arm bone"},
+   {n:15, label:"Ribs", note:"twelve pairs"},
+   {n:16, label:"Pelvic girdle", note:"the two hip bones"},
+   {n:17, label:"Radius", note:"lateral forearm bone — on the thumb side"},
+   {n:18, label:"Ulna", note:"medial forearm bone — forms the point of the elbow"},
+   {n:19, label:"Carpals", note:"eight wrist bones"},
+   {n:20, label:"Metacarpals", note:"the palm"},
+   {n:21, label:"Phalanges (hand)", note:"finger bones"},
+   {n:22, label:"Femur", note:"the thigh bone, longest in the body"},
+   {n:23, label:"Patella", note:"the kneecap"},
+   {n:24, label:"Tibia", note:"the shin; medial and weight-bearing"},
+   {n:25, label:"Fibula", note:"lateral and slender; not weight-bearing"},
+   {n:26, label:"Tarsals", note:"seven ankle bones"},
+   {n:27, label:"Metatarsals", note:"the sole"},
+   {n:28, label:"Phalanges (foot)", note:"toe bones"}]});
+
+PLATES.push({id:"pl-skel-front", unit:"bone", file:"img/skeleton-front-labeled.png", name:"The skeleton, anterior view, labeled", credit:LOH,
+  caption:"The answer key to the numbered figure. Notice the manubrium sitting on top of the sternum, the scapula peeking out lateral to the ribs, and that the radius lies on the thumb side with the palms facing forward.",
+  find:["Manubrium","Sternum","Scapula","Radius","Ulna","Sacrum","Coccyx","Pelvic girdle"]});
+
+PLATES.push({id:"pl-skel-back", unit:"bone", file:"img/skeleton-back-labeled.png", name:"The skeleton, posterior view, labeled", credit:LOH,
+  caption:"From behind the scapulae sit fully in view, the atlas (C1) is visible under the skull, and the calcaneus — the heel bone, largest of the tarsals — is labeled. The vertebral column shows its spinous processes running down the midline.",
+  find:["Atlas (C1)","Scapula","Spinous processes","Sacrum","Calcaneus","Olecranon region of the ulna"]});
+
+PLATES.push({id:"pl-muscles", unit:"mus", file:"img/muscles-anterior.png", name:"Major muscles, anterior view", wide:true,
+  credit:"Mikael Häggström, assembled from Gray's Anatomy plates, via Wikimedia Commons. Public domain.",
+  caption:"The superficial muscles you can name by looking at someone. The left side of the figure shows the surface layer (pectoralis major, deltoid); the right side has it peeled back to show the rotator cuff, brachialis and the ribs. Match each label to its action with the Major muscles set.",
+  find:["Deltoid","Pectoralis major","Rectus abdominis","External oblique","Biceps brachii","Brachialis","Iliopsoas","Quadriceps femoris","Adductor muscles","Tibialis anterior"]});
+
+})();
+(function(){
+"use strict";
+var G = (typeof window !== "undefined") ? window : global;
+var SETS = [];
+G.__MATCHSETS = SETS;
+
+/* Structure sets: the "what is this / where is it" half of the course.
+   Each set feeds the Match tab. Sets marked drill:true also become
+   flashcards and recall questions, so the names get spaced repetition too. */
+
+SETS.push({id:"ms-regions", unit:"org", name:"Body regions — anatomical term to plain name", left:"Term", right:"Plain name", drill:true,
+  why:"Clinicians and textbooks use the Latin regional terms; you must be able to go both ways without thinking.",
+  pairs:[
+   ["Cephalic","Head"],["Cervical","Neck"],["Thoracic","Chest"],["Axillary","Armpit"],["Brachial","Arm (shoulder to elbow)"],
+   ["Antecubital","Front of the elbow"],["Olecranal","Back of the elbow"],["Antebrachial","Forearm"],["Carpal","Wrist"],
+   ["Manual","Hand"],["Pollex","Thumb"],["Digital","Fingers or toes"],["Abdominal","Abdomen"],["Umbilical","Navel"],
+   ["Pelvic","Pelvis"],["Inguinal","Groin"],["Pubic","Genital region"],["Coxal","Hip"],["Gluteal","Buttock"],
+   ["Femoral","Thigh"],["Patellar","Front of the knee"],["Popliteal","Back of the knee"],["Crural","Leg (knee to ankle), shin"],
+   ["Sural","Calf"],["Tarsal","Ankle"],["Pedal","Foot"],["Plantar","Sole of the foot"],["Calcaneal","Heel"],["Hallux","Big toe"],
+   ["Frontal","Forehead"],["Orbital","Eye"],["Otic","Ear"],["Nasal","Nose"],["Buccal","Cheek"],["Oral","Mouth"],["Mental","Chin"],
+   ["Occipital","Back of the head"],["Acromial","Point of the shoulder"],["Scapular","Shoulder blade"],["Vertebral","Spine"],
+   ["Lumbar","Lower back"],["Sacral","Between the hips"],["Sternal","Breastbone"],["Mammary","Breast"],["Dorsal","Back"]]});
+
+SETS.push({id:"ms-direction", unit:"org", name:"Directional terms", left:"Term", right:"Meaning", drill:false,
+  pairs:[
+   ["Superior","Toward the head"],["Inferior","Toward the feet"],["Anterior (ventral)","Toward the front"],["Posterior (dorsal)","Toward the back"],
+   ["Medial","Toward the midline"],["Lateral","Away from the midline"],["Proximal","Closer to the limb's attachment"],["Distal","Farther from the limb's attachment"],
+   ["Superficial","Closer to the surface"],["Deep","Farther beneath the surface"],["Ipsilateral","On the same side"],["Contralateral","On the opposite side"],
+   ["Intermediate","Between two structures"],["Cranial","Toward the skull"],["Caudal","Toward the tail end"]]});
+
+SETS.push({id:"ms-cavities", unit:"org", name:"Organs — where they live", left:"Organ", right:"Cavity or region", drill:false,
+  pairs:[
+   ["Brain","Cranial cavity"],["Spinal cord","Vertebral canal"],["Lungs","Pleural cavities"],["Heart","Pericardial cavity, in the mediastinum"],
+   ["Esophagus and trachea","Mediastinum"],["Stomach","Abdominal cavity, left upper quadrant"],["Liver and gallbladder","Abdominal cavity, right upper quadrant"],
+   ["Appendix","Abdominal cavity, right lower quadrant"],["Sigmoid colon","Abdominal cavity, left lower quadrant"],["Urinary bladder","Pelvic cavity"],
+   ["Rectum","Pelvic cavity"],["Uterus and ovaries","Pelvic cavity"],["Kidneys","Behind the peritoneum (retroperitoneal)"],["Spleen","Left upper quadrant"]]});
+
+SETS.push({id:"ms-molecules", unit:"chem", name:"Molecules — what class, what job", left:"Molecule", right:"Class and role", drill:false,
+  pairs:[
+   ["Glucose","Monosaccharide; fast fuel"],["Glycogen","Polysaccharide; short-term glucose store"],["Triglyceride","Lipid; long-term energy store"],
+   ["Phospholipid","Lipid; builds membranes"],["Cholesterol","Steroid lipid; membranes and hormone precursor"],["Enzyme","Protein; catalyst"],
+   ["Hemoglobin","Protein; oxygen transport"],["Collagen","Protein; structural fiber"],["DNA","Nucleic acid; stores instructions"],
+   ["RNA","Nucleic acid; carries and reads instructions"],["ATP","Nucleotide; energy currency"],["Bicarbonate","Ion; main blood buffer"],
+   ["Sodium chloride","Electrolyte; dissociates into ions"],["Water","Polar solvent; high heat capacity"]]});
+
+SETS.push({id:"ms-organelles", unit:"cell", name:"Organelles — structure to job", left:"Structure", right:"Job", drill:false,
+  pairs:[
+   ["Nucleus","Holds the DNA"],["Nucleolus","Assembles ribosomes"],["Ribosome","Builds proteins"],["Rough ER","Processes proteins for export"],
+   ["Smooth ER","Makes lipids, detoxifies, stores calcium"],["Golgi complex","Modifies, sorts and packages"],["Lysosome","Digests worn parts and invaders"],
+   ["Peroxisome","Neutralizes free radicals"],["Mitochondrion","Makes ATP aerobically"],["Centrioles","Organize the spindle"],
+   ["Cilia","Sweep material across the surface"],["Microvilli","Increase absorptive surface"],["Flagellum","Propels the cell"],
+   ["Plasma membrane","Controls what enters and leaves"],["Cytoskeleton","Shape, movement, internal transport"]]});
+
+SETS.push({id:"ms-transport", unit:"cell", name:"Transport — mechanism to example", left:"Mechanism", right:"Example", drill:false,
+  pairs:[
+   ["Simple diffusion","Oxygen crossing the alveolar wall"],["Facilitated diffusion","Glucose entering a cell through a carrier"],["Osmosis","Water entering a cell in a hypotonic solution"],
+   ["Primary active transport","The sodium-potassium pump"],["Secondary active transport","Glucose absorption in the intestine, riding sodium"],
+   ["Phagocytosis","A white blood cell engulfing a bacterium"],["Pinocytosis","A cell sipping extracellular fluid"],
+   ["Receptor-mediated endocytosis","Cholesterol uptake via LDL receptors"],["Exocytosis","A neuron releasing neurotransmitter"]]});
+
+SETS.push({id:"ms-genetics", unit:"gene", name:"Genetics — term to meaning", left:"Term", right:"Meaning", drill:false,
+  pairs:[
+   ["Codon","Three mRNA bases naming one amino acid"],["Anticodon","The matching triplet on tRNA"],["Transcription","DNA read into mRNA, in the nucleus"],
+   ["Translation","mRNA read into protein, at a ribosome"],["Replication","DNA copied before division"],["Point mutation","One base swapped"],
+   ["Frameshift mutation","A base inserted or deleted"],["S phase","DNA is replicated"],["Metaphase","Chromosomes line up at the equator"],
+   ["Anaphase","Sister chromatids pulled apart"],["Cytokinesis","The cytoplasm divides"],["Apoptosis","Programmed, tidy cell death"],
+   ["Necrosis","Death by injury, with inflammation"],["Meiosis","Produces four haploid gametes"]]});
+
+SETS.push({id:"ms-tissues", unit:"tis", name:"Tissues — where you find them", left:"Tissue", right:"Location", drill:true,
+  why:"Histology questions almost always ask location or function — knowing where a tissue lives is knowing why it looks the way it does.",
+  pairs:[
+   ["Simple squamous epithelium","Alveoli, capillaries, serous membranes"],["Simple cuboidal epithelium","Kidney tubules, gland ducts"],
+   ["Simple columnar epithelium","Lining of stomach and intestines"],["Pseudostratified ciliated columnar","Trachea and bronchi"],
+   ["Stratified squamous, keratinized","Epidermis"],["Stratified squamous, non-keratinized","Mouth, esophagus, vagina"],
+   ["Transitional epithelium","Urinary bladder, ureters"],["Areolar connective tissue","Beneath epithelia, around organs"],
+   ["Adipose tissue","Hypodermis, around kidneys"],["Dense regular connective tissue","Tendons and ligaments"],
+   ["Dense irregular connective tissue","Dermis, organ capsules"],["Hyaline cartilage","Joint surfaces, ribs, nose, trachea"],
+   ["Elastic cartilage","External ear, epiglottis"],["Fibrocartilage","Intervertebral discs, menisci"],["Bone","The skeleton"],
+   ["Blood","Inside vessels"],["Skeletal muscle","Attached to bones"],["Cardiac muscle","Heart wall"],["Smooth muscle","Walls of hollow organs and vessels"],
+   ["Nervous tissue","Brain, spinal cord, nerves"]]});
+
+SETS.push({id:"ms-skin", unit:"skin", name:"Skin — structure to role", left:"Structure", right:"Role", drill:false,
+  pairs:[
+   ["Keratinocyte","Makes keratin; the barrier cell"],["Melanocyte","Makes pigment that shields from UV"],["Dendritic cell","Immune surveillance in the epidermis"],
+   ["Tactile (Merkel) cell","Light-touch sensation"],["Stratum basale","The dividing layer"],["Stratum corneum","Dead, keratinized barrier"],
+   ["Dermal papillae","Fingerprints; bring capillaries near the epidermis"],["Reticular dermis","Strength from collagen in every direction"],
+   ["Hypodermis","Fat: insulation, cushioning, anchoring"],["Eccrine sweat gland","Watery sweat for cooling"],["Apocrine sweat gland","Scent sweat in axilla and groin"],
+   ["Sebaceous gland","Oily sebum into the hair follicle"],["Arrector pili","Raises the hair; goose bumps"],["Hair follicle","Epidermis dipping into the dermis"],
+   ["Nail matrix","Where the nail grows"]]});
+
+SETS.push({id:"ms-bones", unit:"bone", name:"Bones — name to location", left:"Bone", right:"Where it is", drill:true,
+  why:"The major bones are pure recognition. Get them automatic so exam time goes to the harder material.",
+  pairs:[
+   ["Frontal bone","Forehead and roof of the orbits"],["Parietal bones","Top and upper sides of the skull"],["Temporal bones","Sides of the skull around the ear"],
+   ["Occipital bone","Back and base of the skull"],["Sphenoid bone","Butterfly-shaped, floor of the skull; holds the pituitary"],
+   ["Ethmoid bone","Between the orbits; roof of the nasal cavity"],["Mandible","Lower jaw — the only movable skull bone"],["Maxillae","Upper jaw"],
+   ["Zygomatic bones","Cheekbones"],["Nasal bones","Bridge of the nose"],["Hyoid bone","In the neck; touches no other bone"],
+   ["Cervical vertebrae","Seven bones of the neck"],["Thoracic vertebrae","Twelve; each carries a pair of ribs"],["Lumbar vertebrae","Five, the largest; lower back"],
+   ["Sacrum","Five fused vertebrae joining the hip bones"],["Coccyx","Tailbone"],["Sternum","Breastbone"],["Ribs","Twelve pairs; the last two float"],
+   ["Clavicle","Collarbone"],["Scapula","Shoulder blade"],["Humerus","Arm, shoulder to elbow"],["Radius","Forearm, thumb side"],
+   ["Ulna","Forearm, little-finger side; forms the elbow point"],["Carpals","Eight wrist bones"],["Metacarpals","Palm of the hand"],
+   ["Phalanges","Finger and toe bones"],["Ilium","Flared upper part of the hip bone"],["Ischium","The part of the hip bone you sit on"],
+   ["Pubis","Front of the hip bone"],["Femur","Thigh; longest bone"],["Patella","Kneecap"],["Tibia","Shin; medial, weight-bearing leg bone"],
+   ["Fibula","Lateral, slender leg bone; not weight-bearing"],["Tarsals","Seven ankle bones"],["Talus","Ankle bone that meets the tibia"],
+   ["Calcaneus","Heel bone"],["Metatarsals","Sole of the foot"]]});
+
+SETS.push({id:"ms-markings", unit:"bone", name:"Bone markings", left:"Marking", right:"Meaning", drill:true,
+  why:"The same dozen words are reused on every bone in the body. Learn them once and every bone becomes readable.",
+  pairs:[
+   ["Foramen","Round opening for vessels or nerves"],["Fossa","Shallow depression"],["Condyle","Rounded knob that forms a joint"],
+   ["Epicondyle","Bump above a condyle where muscles attach"],["Trochanter","Very large projection; femur only"],["Tubercle","Small rounded projection"],
+   ["Tuberosity","Large rough projection"],["Process","Any bony projection"],["Crest","Narrow ridge"],["Spine","Sharp, slender projection"],
+   ["Head","Rounded end on a narrow neck; forms a joint"],["Meatus","Canal or passageway"],["Sinus","Air-filled cavity within a bone"],
+   ["Facet","Small, smooth, flat joint surface"],["Fissure","Narrow slit for vessels or nerves"],["Sulcus","Groove for a vessel, nerve or tendon"]]});
+
+SETS.push({id:"ms-joints", unit:"jnt", name:"Joints — type to example", left:"Joint type", right:"Example", drill:false,
+  pairs:[
+   ["Hinge","Elbow, knee, finger joints"],["Pivot","Atlas on axis; proximal radioulnar"],["Ball-and-socket","Shoulder, hip"],["Saddle","Thumb carpometacarpal"],
+   ["Condylar","Knuckles, wrist"],["Plane (gliding)","Between the carpals"],["Suture","Between skull bones"],["Symphysis","Pubic symphysis, intervertebral discs"],
+   ["Synchondrosis","Epiphyseal plate, first rib to sternum"],["Syndesmosis","Distal tibia to fibula"],["Gomphosis","Tooth in its socket"]]});
+
+SETS.push({id:"ms-moves", unit:"jnt", name:"Movements", left:"Movement", right:"What it does", drill:false,
+  pairs:[
+   ["Flexion","Decreases the angle at a joint"],["Extension","Increases the angle at a joint"],["Abduction","Moves away from the midline"],["Adduction","Moves toward the midline"],
+   ["Circumduction","Traces a cone; distal end draws a circle"],["Rotation","Turns around the long axis"],["Supination","Palm turns to face forward"],["Pronation","Palm turns to face backward"],
+   ["Dorsiflexion","Toes lift toward the shin"],["Plantar flexion","Toes point down; standing on tiptoe"],["Inversion","Sole turns inward"],["Eversion","Sole turns outward"],
+   ["Elevation","Lifts a part superiorly; shrugging"],["Depression","Lowers a part; opening the mouth"],["Protraction","Moves a part forward; jutting the jaw"],["Retraction","Pulls a part backward"],
+   ["Opposition","Thumb touches the fingertips"]]});
+
+SETS.push({id:"ms-muscles", unit:"mus", name:"Major muscles — name to action and place", left:"Muscle", right:"Action and location", drill:true,
+  why:"Muscle names are built from location, shape, size and action — once you can decode a name, the muscle tells you what it does.",
+  pairs:[
+   ["Frontalis","Raises the eyebrows; forehead"],["Orbicularis oculi","Closes the eye"],["Orbicularis oris","Closes and puckers the lips"],
+   ["Masseter","Closes the jaw; chewing"],["Temporalis","Closes the jaw; side of the head"],["Sternocleidomastoid","Flexes and rotates the head; neck strap"],
+   ["Trapezius","Elevates, retracts and rotates the scapula; upper back"],["Deltoid","Abducts the arm; cap of the shoulder"],
+   ["Pectoralis major","Adducts and flexes the arm; chest"],["Latissimus dorsi","Extends and adducts the arm; broad back muscle"],
+   ["Serratus anterior","Protracts the scapula; boxer's muscle"],["Rotator cuff","Four muscles that stabilize the shoulder"],
+   ["Biceps brachii","Flexes the elbow, supinates the forearm"],["Triceps brachii","Extends the elbow; back of the arm"],["Brachialis","Flexes the elbow; deep to biceps"],
+   ["Rectus abdominis","Flexes the trunk; the six-pack"],["External oblique","Rotates and flexes the trunk; side of the abdomen"],
+   ["Transversus abdominis","Compresses the abdomen; deepest layer"],["Diaphragm","The main muscle of breathing"],["Intercostals","Move the ribs in breathing"],
+   ["Erector spinae","Extends the spine; keeps you upright"],["Iliopsoas","Flexes the thigh at the hip"],["Gluteus maximus","Extends the thigh; climbing and standing up"],
+   ["Gluteus medius","Abducts the thigh; steadies the pelvis when walking"],["Adductor group","Adducts the thigh; inner thigh"],
+   ["Sartorius","Longest muscle; crosses the thigh; sitting cross-legged"],["Quadriceps femoris","Extends the knee; front of the thigh"],
+   ["Hamstrings","Flex the knee and extend the thigh; back of the thigh"],["Tibialis anterior","Dorsiflexes the foot; shin"],
+   ["Gastrocnemius","Plantar flexes the foot; the calf"],["Soleus","Plantar flexes; deep to gastrocnemius"],["Achilles (calcaneal) tendon","Attaches the calf muscles to the heel"]]});
+
+SETS.push({id:"ms-naming", unit:"mus", name:"Decoding muscle names", left:"Name part", right:"Meaning", drill:false,
+  pairs:[
+   ["Rectus","Straight fibers"],["Oblique","Diagonal fibers"],["Transversus","Fibers running across"],["Maximus","Largest"],["Minimus","Smallest"],
+   ["Longus","Long"],["Brevis","Short"],["Biceps","Two heads"],["Triceps","Three heads"],["Quadriceps","Four heads"],["Deltoid","Triangular"],
+   ["Trapezius","Trapezoid-shaped"],["Brachii","Of the arm"],["Femoris","Of the thigh"],["Abductor","Moves away from the midline"],["Adductor","Moves toward the midline"],
+   ["Flexor","Bends a joint"],["Extensor","Straightens a joint"],["Levator","Lifts"],["Sternocleidomastoid","Named for its attachments: sternum, clavicle, mastoid process"]]});
+
+SETS.push({id:"ms-brain", unit:"nrv", name:"Brain regions — what each does", left:"Region", right:"Job", drill:true,
+  why:"Localizing a deficit to a brain region is one of the most common second-order questions in neuro.",
+  pairs:[
+   ["Frontal lobe","Planning, judgment, voluntary movement, speech production"],["Parietal lobe","Touch and body-position sensation"],
+   ["Occipital lobe","Vision"],["Temporal lobe","Hearing, smell, memory formation"],["Primary motor cortex","Initiates voluntary movement; precentral gyrus"],
+   ["Primary somatosensory cortex","Receives touch; postcentral gyrus"],["Broca's area","Producing speech"],["Wernicke's area","Understanding language"],
+   ["Cerebellum","Coordination, balance, timing"],["Thalamus","Relay station for sensory input to the cortex"],["Hypothalamus","Homeostasis; controls the pituitary"],
+   ["Hippocampus","Forming new memories"],["Amygdala","Fear and emotional memory"],["Midbrain","Visual and auditory reflexes"],
+   ["Pons","Bridge between cerebellum and cerebrum; helps regulate breathing"],["Medulla oblongata","Heart rate, blood pressure, breathing"],
+   ["Corpus callosum","Connects the two hemispheres"],["Basal nuclei","Start and stop movement; smooth it out"]]});
+
+SETS.push({id:"ms-glia", unit:"nrv", name:"Neuroglia and neuron parts", left:"Cell or part", right:"Job", drill:false,
+  pairs:[
+   ["Astrocyte","Supports neurons; forms the blood-brain barrier"],["Microglia","Immune defense inside the CNS"],["Ependymal cell","Lines ventricles; circulates CSF"],
+   ["Oligodendrocyte","Myelinates axons in the CNS"],["Schwann cell","Myelinates axons in the PNS"],["Satellite cell","Surrounds cell bodies in ganglia"],
+   ["Dendrite","Receives signals"],["Axon hillock","Trigger zone; where threshold is tested"],["Axon","Conducts the impulse away"],
+   ["Node of Ranvier","Gap in myelin where the impulse jumps"],["Axon terminal","Releases neurotransmitter"],["Synaptic cleft","Gap the transmitter must cross"]]});
+
+SETS.push({id:"ms-eye-ear", unit:"sen", name:"Eye and ear — structure to function", left:"Structure", right:"Function", drill:true,
+  why:"Sense-organ questions are nearly all structure-to-function. Two organs, about twenty parts.",
+  pairs:[
+   ["Cornea","Bends most of the incoming light"],["Sclera","Tough white protective coat"],["Choroid","Vascular layer; feeds the retina"],["Iris","Controls pupil size"],
+   ["Pupil","The opening that admits light"],["Lens","Fine-tunes focus; changes shape"],["Ciliary body","Changes lens shape; makes aqueous humor"],
+   ["Retina","Holds the photoreceptors"],["Fovea centralis","Sharpest vision; all cones"],["Optic disc","Blind spot; optic nerve exits"],
+   ["Rods","Dim light, peripheral vision, no color"],["Cones","Color and detail in bright light"],["Vitreous body","Gel that holds the eyeball's shape"],
+   ["Tympanic membrane","Eardrum; vibrates with sound"],["Malleus, incus, stapes","Ossicles; amplify vibration to the oval window"],
+   ["Cochlea","Hearing; hair cells in the organ of Corti"],["Semicircular canals","Rotational balance"],["Utricle and saccule","Linear acceleration and head position"],
+   ["Auditory (Eustachian) tube","Equalizes middle-ear pressure"],["Auricle (pinna)","Funnels sound into the canal"]]});
+
 })();
 (function(){
 "use strict";
@@ -2234,8 +2475,36 @@ UNITS.forEach(function(u){
   u.cards.forEach(function(c){ ALL_CARDS.push({id:c.id, unit:u.id, unitName:u.short, f:c.f, b:c.b, why:c.why||""}); });
   u.qs.forEach(function(q){ ALL_QS.push({id:q.id, unit:u.id, unitName:u.short, o:q.o, v:q.v||"", s:q.s, a:q.a, e:q.e}); });
 });
+/* Structure sets (regions, bones, muscles...). Sets marked drill:true also
+   become flashcards and identification questions. Identification questions
+   keep every other pair as a candidate wrong answer; three are drawn when the
+   exam is built, so the same question reads differently each time.         */
+var MATCHSETS = G.__MATCHSETS || [], GEN_QS = [];
+MATCHSETS.forEach(function(s){
+  var u = unitById(s.unit); if(!u || !s.drill) return;
+  s.pairs.forEach(function(p, i){
+    ALL_CARDS.push({id:s.id+"-c"+(i+1), unit:u.id, unitName:u.short, f:p[0], b:p[1], why:s.why || "", gen:true});
+    var otherF = s.pairs.filter(function(o){ return o[1] !== p[1]; }).map(function(o){ return {t:o[1], ok:false, w:"That is the "+s.left.toLowerCase()+" <b>"+o[0]+"</b>."}; });
+    var otherR = s.pairs.filter(function(o){ return o[0] !== p[0]; }).map(function(o){ return {t:o[0], ok:false, w:o[0]+": "+o[1]+"."}; });
+    GEN_QS.push({id:s.id+"-qf"+(i+1), unit:u.id, unitName:u.short, o:1, gen:true, v:"", e:s.why || "",
+      s:"<b>"+esc(p[0])+"</b> — which "+s.right.toLowerCase()+" is correct?",
+      a:[{t:p[1], ok:true, w:p[0]+": "+p[1]+"."}].concat(otherF)});
+    GEN_QS.push({id:s.id+"-qr"+(i+1), unit:u.id, unitName:u.short, o:1, gen:true, v:"", e:s.why || "",
+      s:"Which "+s.left.toLowerCase()+" matches: <b>"+esc(p[1])+"</b>?",
+      a:[{t:p[0], ok:true, w:p[0]+": "+p[1]+"."}].concat(otherR)});
+  });
+});
 function cardsFor(sel){ return sel==="all" ? ALL_CARDS : ALL_CARDS.filter(function(c){ return c.unit===sel; }); }
 function qsFor(sel){ return sel==="all" ? ALL_QS : ALL_QS.filter(function(q){ return q.unit===sel; }); }
+function genFor(sel){ return sel==="all" ? GEN_QS : GEN_QS.filter(function(q){ return q.unit===sel; }); }
+function matchSetsFor(sel){ return sel==="all" ? MATCHSETS : MATCHSETS.filter(function(s){ return s.unit===sel; }); }
+function setById(id){ for(var i=0;i<MATCHSETS.length;i++){ if(MATCHSETS[i].id===id) return MATCHSETS[i]; } return null; }
+function matchFromSet(id, n){
+  var s = setById(id); if(!s) return [];
+  var seen = {}, items = [];
+  s.pairs.forEach(function(p, i){ if(seen[p[1]]) return; seen[p[1]] = 1; items.push({id:s.id+"-"+i, term:p[0], def:p[1]}); });
+  return pick(items, Math.min(n || 8, items.length));
+}
 
 /* ================================================================ scheduling */
 /* A Leitner box system. Box 0 is new or just failed; box 5 is long-term.
@@ -2259,20 +2528,37 @@ function isDue(st, day){ return !st || st.seen === 0 || st.d <= day; }
 function isMastered(st){ return !!st && st.b >= 4; }
 
 /* ================================================================ exam building */
+/* order: 0 mixed (written + identification), 1 recall (written recall +
+   identification), 2 application only, 3 identification only.             */
 function examPool(opts){
-  var pool = qsFor(opts.scope === "all" ? "all" : opts.unit);
-  if(opts.order === 2) pool = pool.filter(function(q){ return q.o === 2; });
-  else if(opts.order === 1) pool = pool.filter(function(q){ return q.o === 1; });
+  var scope = opts.scope === "all" ? "all" : opts.unit;
+  var hand = qsFor(scope), gen = genFor(scope), pool;
+  if(opts.order === 2) pool = hand.filter(function(q){ return q.o === 2; });
+  else if(opts.order === 1) pool = hand.filter(function(q){ return q.o === 1; }).concat(gen);
+  else if(opts.order === 3) pool = gen;
+  else pool = hand.concat(gen);
   if(opts.only && opts.only.length) pool = pool.filter(function(q){ return opts.only.indexOf(q.id) >= 0; });
   return pool;
 }
+function materialize(q){
+  var a = q.a.map(function(x){ return {t:x.t, ok:!!x.ok, w:x.w || ""}; });
+  if(q.gen){ a = a.filter(function(x){ return x.ok; }).concat(pick(a.filter(function(x){ return !x.ok; }), 3)); }
+  return {id:q.id, unit:q.unit, unitName:q.unitName, o:q.o, gen:!!q.gen, v:q.v, s:q.s, e:q.e, opts:shuffle(a)};
+}
 function buildExam(opts){
-  var pool = examPool(opts);
+  var pool = examPool(opts), n = opts.n || 10;
   if(!pool.length) return [];
-  return pick(pool, Math.min(opts.n || 10, pool.length)).map(function(q){
-    return {id:q.id, unit:q.unit, unitName:q.unitName, o:q.o, v:q.v, s:q.s, e:q.e,
-            opts:shuffle(q.a.map(function(a){ return {t:a.t, ok:!!a.ok, w:a.w || ""}; }))};
-  });
+  var picks;
+  if(opts.order === 0 && !(opts.only && opts.only.length)){
+    /* a mixed exam is mostly written questions; identification fills at most a third */
+    var hand = pool.filter(function(q){ return !q.gen; }), gen = pool.filter(function(q){ return q.gen; });
+    var nGen = Math.min(gen.length, Math.floor(n / 3)), nHand = Math.min(hand.length, n - nGen);
+    nGen = Math.min(gen.length, n - nHand);
+    picks = shuffle(pick(hand, nHand).concat(pick(gen, nGen)));
+  } else {
+    picks = pick(pool, Math.min(n, pool.length));
+  }
+  return picks.map(materialize);
 }
 
 /* ================================================================ matching sets */
@@ -2310,6 +2596,15 @@ function plateQuiz(list){
             opts:shuffle([{t:p.name, ok:true}].concat(others.map(function(x){ return {t:x.name, ok:false}; })))};
   });
 }
+/* A numbered plate: "what is structure 14?" with the other numbers as wrong answers. */
+function plateKeyQuiz(p){
+  if(!p.key) return [];
+  return shuffle(p.key).map(function(k){
+    var others = pick(p.key.filter(function(x){ return x.label !== k.label; }), 3);
+    return {n:k.n, label:k.label, note:k.note || "",
+            opts:shuffle([{t:k.label, ok:true}].concat(others.map(function(x){ return {t:x.label, ok:false}; })))};
+  });
+}
 function diagramQuiz(dg){
   return shuffle(dg.pins).map(function(p){
     var others = pick(dg.pins.filter(function(x){ return x.n !== p.n; }), 3);
@@ -2321,6 +2616,7 @@ function diagramQuiz(dg){
 /* ---- tests run without a browser ---- */
 if(typeof window === "undefined"){
   module.exports = {UNITS:UNITS, DIAGRAMS:DIAGRAMS, PLATES:PLATES, ALL_CARDS:ALL_CARDS, ALL_QS:ALL_QS,
+    MATCHSETS:MATCHSETS, GEN_QS:GEN_QS, genFor:genFor, matchSetsFor:matchSetsFor, matchFromSet:matchFromSet, plateKeyQuiz:plateKeyQuiz,
     cardsFor:cardsFor, qsFor:qsFor, buildExam:buildExam, examPool:examPool, matchSet:matchSet,
     diagramQuiz:diagramQuiz, diagramsFor:diagramsFor, platesFor:platesFor, plateQuiz:plateQuiz, schedule:schedule, newState:newState,
     isDue:isDue, isMastered:isMastered, INTERVAL:INTERVAL, todayIndex:todayIndex};
@@ -2374,10 +2670,10 @@ if(sel !== "all" && !unitById(sel)) sel = UNITS[0].id;
 })();
 function unitLabel(){ return sel === "all" ? "All units" : unitById(sel).name; }
 function updateMeta(){
-  var c = cardsFor(sel).length, q = qsFor(sel).length, d = diagramsFor(sel).length, p = platesFor(sel).length;
+  var c = cardsFor(sel).length, q = qsFor(sel).length, g = genFor(sel).length, d = diagramsFor(sel).length, p = platesFor(sel).length;
   var app = qsFor(sel).filter(function(x){ return x.o === 2; }).length;
-  $("#unitMeta").textContent = c + " cards · " + q + " questions (" + app + " application) · " +
-    d + " diagram" + (d===1?"":"s") + (p ? " · " + p + " plate" + (p===1?"":"s") : "");
+  $("#unitMeta").textContent = c + " cards · " + q + " questions (" + app + " application)" + (g ? " + " + g + " identification" : "") +
+    " · " + d + " diagram" + (d===1?"":"s") + (p ? " · " + p + " plate" + (p===1?"":"s") : "");
 }
 function updateDue(){
   var day = todayIndex();
@@ -2500,7 +2796,8 @@ function renderExamSetup(){
         '<button type="button" data-o="0" aria-pressed="'+(examCfg.order===0)+'">Mixed</button>'+
         '<button type="button" data-o="2" aria-pressed="'+(examCfg.order===2)+'">Application only</button>'+
         '<button type="button" data-o="1" aria-pressed="'+(examCfg.order===1)+'">Recall only</button>'+
-      '</div><p class="note">Application questions give you a situation and make you use the material, rather than asking you to repeat it. These are the second-order questions your lecture exams lean on.</p></div>'+
+        '<button type="button" data-o="3" aria-pressed="'+(examCfg.order===3)+'">Identification only</button>'+
+      '</div><p class="note">Application questions give you a situation and make you use the material — the second-order questions your lecture exams lean on. Identification questions are the structure half: name the bone, the region, the muscle, the tissue.</p></div>'+
       '<div class="grp"><span class="glab">Draw from</span><div class="seg" id="segS">'+
         '<button type="button" data-s="unit" aria-pressed="'+(examCfg.scope==="unit")+'">This unit</button>'+
         '<button type="button" data-s="all" aria-pressed="'+(examCfg.scope==="all")+'">All units</button>'+
@@ -2545,7 +2842,7 @@ function renderExam(){
     '<div class="dots" id="dots"></div>'+
     '<div class="card qbox">'+
       '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+
-        '<span class="tag '+(q.o===2?'apply':'recall')+'">'+(q.o===2?'Application':'Recall')+'</span>'+
+        '<span class="tag '+(q.o===2?'apply':'recall')+'">'+(q.gen ? 'Identification' : (q.o===2?'Application':'Recall'))+'</span>'+
         '<span class="tag">'+esc(q.unitName)+'</span>'+
       '</div>'+
       '<p class="stem">'+(q.v ? '<span class="vig">'+q.v+'</span>' : '')+q.s+'</p>'+
@@ -2679,29 +2976,43 @@ function brow(name, r, n){
 }
 
 /* ================================================================ 3. MATCH */
-var match = null;
+var match = null, matchChoice = DB.prefs.matchSet || null;
 function newMatch(){
-  var items = matchSet(sel, 8);
-  match = {items:items, sel:null, done:0, miss:0};
+  var sets = matchSetsFor(sel);
+  if(matchChoice !== "defs" && !sets.filter(function(s){ return s.id === matchChoice; }).length){
+    matchChoice = sets.length ? sets[0].id : "defs";
+  }
+  var s = matchChoice === "defs" ? null : setById(matchChoice);
+  var items = s ? matchFromSet(s.id, 8) : matchSet(sel, 8);
+  match = {items:items, sel:null, done:0, miss:0, left:s ? s.left : "Term", right:s ? s.right : "Definition"};
+  DB.prefs.matchSet = matchChoice; save();
   renderMatch();
 }
 function renderMatch(){
   var root = $("#matchRoot");
-  if(!match || !match.items.length){
-    if(!match) newMatch();
-    if(!match.items.length){ root.innerHTML = '<div class="empty">No short definitions in this unit to match. Try another unit.</div>'; return; }
+  if(!match) newMatch();
+  var m = match, sets = matchSetsFor(sel);
+  var picker = '<select id="mSet" aria-label="What to match">'+
+    sets.map(function(s){ return '<option value="'+s.id+'"'+(s.id===matchChoice?' selected':'')+'>'+esc(s.name)+'</option>'; }).join("")+
+    '<option value="defs"'+(matchChoice==="defs"?' selected':'')+'>Terms and definitions from the cards</option></select>';
+  if(!m.items.length){
+    root.innerHTML = '<div class="studyhead">'+picker+'</div><div class="empty">Nothing to match here. Pick another set or unit.</div>';
+    $("#mSet").addEventListener("change", function(){ matchChoice = this.value; newMatch(); });
+    return;
   }
-  var m = match;
   root.innerHTML =
-    '<div class="studyhead">'+
-      '<div class="chips"><span>Matched <b>'+m.done+' of '+m.items.length+'</b></span><span>Misses <b>'+m.miss+'</b></span></div>'+
-      '<button class="btn sm" id="mNew">New round</button>'+
+    '<div class="studyhead">'+picker+
+      '<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">'+
+        '<div class="chips"><span>Matched <b>'+m.done+' of '+m.items.length+'</b></span><span>Misses <b>'+m.miss+'</b></span></div>'+
+        '<button class="btn sm" id="mNew">New round</button>'+
+      '</div>'+
     '</div>'+
     (m.done === m.items.length ? '<div class="banner">Round complete — '+(m.miss===0?'a perfect run.':m.miss+(m.miss===1?' miss.':' misses.'))+'</div>' : '')+
     '<div class="mgrid">'+
-      '<div class="mcol"><h3>Term</h3><div class="tiles" id="mL"></div></div>'+
-      '<div class="mcol"><h3>Definition</h3><div class="tiles" id="mR"></div></div>'+
+      '<div class="mcol"><h3>'+esc(m.left)+'</h3><div class="tiles" id="mL"></div></div>'+
+      '<div class="mcol"><h3>'+esc(m.right)+'</h3><div class="tiles" id="mR"></div></div>'+
     '</div>';
+  $("#mSet").addEventListener("change", function(){ matchChoice = this.value; newMatch(); });
   $("#mNew").addEventListener("click", newMatch);
   var L = $("#mL"), R = $("#mR");
   shuffle(m.items).forEach(function(it){ tile(L, it, "L", it.term, "tile term"); });
@@ -2746,7 +3057,7 @@ function wireView(){
   $("#dgView").addEventListener("click", function(e){
     var b = e.target.closest ? e.target.closest("button[data-v]") : null;
     if(!b) return;
-    dg.view = b.getAttribute("data-v"); dg.pq = null; dg.quiz = null; dg.shown = {}; renderDiagrams();
+    dg.view = b.getAttribute("data-v"); dg.pq = null; dg.kq = null; dg.quiz = null; dg.shown = {}; renderDiagrams();
   });
 }
 function renderDiagrams(){
@@ -2793,16 +3104,18 @@ function renderPlates(plates){
     wireView(); return;
   }
   if(dg.pq){ renderPlateQuiz(); return; }
+  if(dg.kq){ renderKeyQuiz(); return; }
   root.innerHTML =
     '<div class="studyhead">'+viewToggle()+
       '<button class="btn sm primary" id="plQuiz">Quiz: name the plate</button>'+
     '</div>'+
-    '<p class="hintbar" style="margin:0 0 16px">Real anatomical plates, in the public domain. Read the caption, then find each item in the list before you move on.</p>'+
+    '<p class="hintbar" style="margin:0 0 16px">Real anatomical figures, in the public domain. Read the caption, then find each item in the list before you move on.</p>'+
     '<div class="plates">'+plates.map(function(p){
-      return '<article class="plate card">'+
+      return '<article class="plate card'+(p.wide ? ' wide' : '')+'">'+
         '<div class="plimg"><img src="'+p.file+'" alt="'+esc(p.name)+'" loading="lazy"></div>'+
         '<div class="pltext"><h3>'+esc(p.name)+'</h3><p class="cap">'+p.caption+'</p>'+
-        '<div class="find">'+p.find.map(function(f){ return '<span class="chip">'+esc(f)+'</span>'; }).join("")+'</div>'+
+        (p.find ? '<div class="find">'+p.find.map(function(f){ return '<span class="chip">'+esc(f)+'</span>'; }).join("")+'</div>' : '')+
+        (p.key ? '<div style="margin-top:14px"><button class="btn sm primary" data-key="'+p.id+'">Quiz me on the numbers ('+p.key.length+')</button></div>' : '')+
         '<p class="credit">'+esc(p.credit)+'</p></div>'+
       '</article>';
     }).join("")+'</div>';
@@ -2810,6 +3123,55 @@ function renderPlates(plates){
   $("#plQuiz").addEventListener("click", function(){
     dg.pq = plateQuiz(plates.length >= 4 ? plates : PLATES); dg.pqi = 0; dg.pscore = 0; renderPlates(plates);
   });
+  $$("button[data-key]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var p = PLATES.filter(function(x){ return x.id === b.getAttribute("data-key"); })[0];
+      dg.kq = {plate:p, qs:plateKeyQuiz(p), i:0, score:0}; renderDiagrams();
+    });
+  });
+}
+function renderKeyQuiz(){
+  var root = $("#dgRoot"), k = dg.kq, p = k.plate;
+  if(k.i >= k.qs.length){
+    var C = 2*Math.PI*58;
+    root.innerHTML = '<div class="studyhead">'+viewToggle()+'</div>'+
+      '<div class="card res" style="text-align:center">'+
+        '<div class="ring" style="margin:0 auto"><svg width="132" height="132"><circle cx="66" cy="66" r="58" fill="none" stroke="var(--surface-3)" stroke-width="11"/>'+
+        '<circle cx="66" cy="66" r="58" fill="none" stroke="var(--accent)" stroke-width="11" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-k.score/k.qs.length))+'"/></svg>'+
+        '<div class="val">'+pct(k.score,k.qs.length)+'%<small>'+k.score+' of '+k.qs.length+'</small></div></div>'+
+        '<p style="margin-top:12px;color:var(--ink-2)">'+esc(p.name)+'</p>'+
+        '<div style="margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn primary" id="kAgain">Go again</button><button class="btn" id="kBack">Back to the plates</button></div>'+
+      '</div>';
+    wireView();
+    $("#kAgain").addEventListener("click", function(){ dg.kq = {plate:p, qs:plateKeyQuiz(p), i:0, score:0}; renderDiagrams(); });
+    $("#kBack").addEventListener("click", function(){ dg.kq = null; renderDiagrams(); });
+    return;
+  }
+  var q = k.qs[k.i];
+  root.innerHTML = '<div class="studyhead">'+viewToggle()+'<span class="qcount">'+esc(p.name)+' · '+(k.i+1)+' of '+k.qs.length+'</span></div>'+
+    '<div class="card qbox">'+
+      '<div class="plimg quiz key"><img src="'+p.file+'" alt="Numbered figure"></div>'+
+      '<p class="stem" style="margin-top:18px">What is structure number <b style="font-size:1.25em;color:var(--accent)">'+q.n+'</b>?</p>'+
+      '<div class="opts" id="kOpts"></div><div id="kFb"></div>'+
+      '<div class="qfoot"><button class="btn ghost sm" id="kStop">Stop</button><button class="btn primary" id="kNext" hidden>Next</button></div>'+
+    '</div>';
+  wireView();
+  var wrap = $("#kOpts");
+  q.opts.forEach(function(o, i){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "opt";
+    b.innerHTML = '<span class="k">'+String.fromCharCode(65+i)+'</span><span>'+esc(o.t)+'</span>';
+    b.addEventListener("click", function(){
+      if(b.disabled) return;
+      $$("#kOpts .opt").forEach(function(x, j){ x.disabled = true; if(q.opts[j].ok) x.classList.add("correct"); });
+      if(!o.ok) b.classList.add("wrong"); else k.score++;
+      $("#kFb").innerHTML = '<div class="fb '+(o.ok?"good":"bad")+'"><span class="lead">'+(o.ok?"Correct":"Not this one")+'</span>Number '+q.n+' is the <b>'+esc(q.label)+'</b>'+(q.note ? ' — '+esc(q.note) : '')+'.</div>';
+      var nb = $("#kNext"); nb.hidden = false; nb.focus();
+    });
+    wrap.appendChild(b);
+  });
+  $("#kNext").addEventListener("click", function(){ k.i++; renderDiagrams(); });
+  $("#kStop").addEventListener("click", function(){ dg.kq = null; renderDiagrams(); });
 }
 function renderPlateQuiz(){
   var root = $("#dgRoot");
