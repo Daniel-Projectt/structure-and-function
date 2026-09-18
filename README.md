@@ -15,4 +15,3 @@ Images in img/ come via Wikimedia Commons:
 - Gray's Anatomy (1918) and Encyclopaedia Britannica (1911) plates - public domain.
 - Skeleton figures by Mariana Ruiz Villarreal (LadyofHats) - public domain.
 - Anterior muscles figure by Mikael Haggstrom, assembled from Gray's plates - public domain.
-- Regions of the Human Body - OpenStax, Anatomy and Physiology, CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).

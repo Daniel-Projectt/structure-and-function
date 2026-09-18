@@ -229,6 +229,7 @@ ok(/id="mSet"/.test(src), 'match tab has a set picker');
 head('plates');
 const IMG = 'C:/Users/DaniM/OneDrive/Desktop/Personal Projects/structure-and-function/';
 ok(A.PLATES.length >= 8, 'at least eight plates', 'got ' + A.PLATES.length);
+ok(!A.PLATES.some(p => /regions-openstax/.test(p.file)) && !fs.existsSync(IMG + 'img/regions-openstax.jpg'), 'the nude body-regions figure is gone (Daniel asked)');
 const plIds = new Set(), plNames = new Set();
 A.PLATES.forEach(p => {
   ok(!plIds.has(p.id), 'plate id unique: ' + p.id); plIds.add(p.id);
@@ -288,8 +289,7 @@ ok(new Set(A.VERDICTS.flatMap(v => v.t)).size === A.VERDICTS.flatMap(v => v.t).l
 ok(tier(100).t.some(t => /GOAT/.test(t)) && tier(0).t.some(t => /cheeks/.test(t)), 'GOAT at the top, cheeks at the bottom');
 ok(A.REACT.ok.length >= 4 && A.REACT.no.length >= 4, 'reaction pools exist for right and wrong answers');
 const allLines = A.VERDICTS.flatMap(v => v.t).concat(A.REACT.ok, A.REACT.no).join(' | ');
-ok(!/sheesh|no crumbs/i.test(allLines), 'vetoed lines are gone (Sheesh, Ate and left no crumbs)', allLines);
-ok(/Behind the pack/.test(allLines), '"Behind the pack" is in');
+ok(!/sheesh|no crumbs|behind the pack|giving competent|giving guess|almost there|we outside|put on for|stay ready/i.test(allLines), 'vetoed lines are gone', allLines);
 ok(/reaction\(right\)/.test(src), 'reactions are shown after exam answers');
 ok((src.match(/verdictFor\(/g) || []).length >= 5, 'verdict is used on every quiz result screen');
 

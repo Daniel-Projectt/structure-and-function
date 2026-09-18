@@ -2168,11 +2168,6 @@ PLATES.push({id:"pl-ear", unit:"sen", file:"img/gray923-cochlea.png", name:"The 
 /* ---- whole-body figures: regions, skeleton, muscles ---- */
 var LOH = "Mariana Ruiz Villarreal (LadyofHats), via Wikimedia Commons. Public domain.";
 
-PLATES.push({id:"pl-regions", unit:"org", file:"img/regions-openstax.jpg", name:"Regions of the body, anterior and posterior", wide:true,
-  credit:"OpenStax, Anatomy and Physiology, via Wikimedia Commons. CC BY 4.0.",
-  caption:"Every region carries a Latin noun and an adjective form in parentheses — the adjective is the one used in clinical notes (an <i>antecubital</i> vein, a <i>popliteal</i> pulse). Read the anterior view top to bottom, then the posterior, then test yourself with the Body regions set in Match.",
-  find:["Antecubital (front of elbow)","Antebrachial (forearm)","Carpal (wrist)","Inguinal (groin)","Crural (leg)","Popliteal (back of knee)","Sural (calf)","Calcaneal (heel)","Acromial (shoulder)","Olecranal (back of elbow)"]});
-
 PLATES.push({id:"pl-skel-num", unit:"bone", file:"img/skeleton-front-numbered.png", name:"The skeleton, numbered", credit:LOH,
   caption:"Red numbers point to single bones; blue numbers point to groups. Cover the list and name each number before you check. Then use the quiz — it asks the numbers in random order.",
   key:[
@@ -2564,20 +2559,20 @@ function diagramQuiz(dg){
    Edit the pools freely; anything with one entry is fine. */
 var VERDICTS = [
   {min:100, a:"Nothing left here. Push into a harder mix — all units, application only.",
-   t:["You’re the GOAT.","Absolute cinema.","+1000 aura.","We’re so back.","Goated, no cap.","You did that.","Built different.","Period.","On god, that’s clean.","Put on for the city."]},
+   t:["You’re the GOAT.","Absolute cinema.","+1000 aura.","We’re so back.","Goated, no cap.","You did that.","Built different.","Period.","Bro is the professor.","Teach the class, twin.","They not like us."]},
   {min:85,  a:"Strong. The misses below are the whole job now.",
-   t:["You’re him.","Certified.","Locked in.","Big W.","He’s him, chat.","Let him cook.","You slid.","Big dawg energy.","That’s tough.","Stay ready so you don’t have to get ready."]},
+   t:["You’re him.","Certified.","Locked in.","Big W.","He’s him, chat.","Let him cook.","You slid.","Big dawg energy.","That’s tough.","Bro studied.","One away from disrespectful."]},
   {min:70,  a:"Solid base, but the gaps are real. Work the misses, then retake.",
-   t:["Main character energy.","Lowkey solid.","Not bad, twin.","Say less — almost there.","It’s giving competent.","You good, keep going.","Run it back.","Respectable.","We outside, but not all the way."]},
+   t:["Main character energy.","Lowkey solid.","Not bad, twin.","Run it back.","Respectable.","You’ll live.","Passing, but don’t celebrate.","B-tier. Respectfully.","Solid — don’t get comfortable."]},
   {min:50,  a:"About half. Back to the flashcards for this unit before testing again.",
-   t:["You’re a bot.","Mid.","It’s giving NPC.","Bruh.","Crack a lackin’.","Chat, is this real?","Behind the pack.","You good?","Ain’t no way.","Get your weight up."]},
+   t:["You’re a bot.","Mid.","It’s giving NPC.","Bruh.","Crack a lackin’.","Chat, is this real?","You good?","Ain’t no way.","Get your weight up.","Who let bro cook?","Coin-flip energy."]},
   {min:0,   a:"Start with the flashcards and the diagrams. Testing before the material is in place mostly measures frustration.",
-   t:["You’re cheeks.","Cooked.","It’s so over.","Pack it up.","Nah bro.","Down bad.","In the trenches.","That’s wild.","Lock in, bro.","Somebody come get him."]}
+   t:["You’re cheeks.","Cooked.","It’s so over.","Pack it up.","Nah bro.","Down bad.","In the trenches.","Lock in, bro.","Somebody come get him.","Bro guessed the whole thing.","That exam would’ve had you in a headlock.","Not a single one landed, twin."]}
 ];
 /* Short reactions after a single answer. Shown about a third of the time so they stay funny. */
 var REACT = {
-  ok:["W","say less","no cap","easy","locked in","twin ❤","that’s him","period","on god","you did that","clean"],
-  no:["bruh","nah","crack a lackin’","L","not this one, twin","cooked","chat…","it’s giving guess","ain’t no way","lock in","behind the pack"]
+  ok:["W","say less","no cap","easy","locked in","twin ❤","that’s him","period","on god","you did that","clean","too easy"],
+  no:["bruh","nah","crack a lackin’","L","not this one, twin","cooked","chat…","ain’t no way","lock in","who told you that","respectfully, no"]
 };
 function verdictFor(p){
   for(var i=0;i<VERDICTS.length;i++){

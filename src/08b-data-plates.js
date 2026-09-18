@@ -48,11 +48,6 @@ PLATES.push({id:"pl-ear", unit:"sen", file:"img/gray923-cochlea.png", name:"The 
 /* ---- whole-body figures: regions, skeleton, muscles ---- */
 var LOH = "Mariana Ruiz Villarreal (LadyofHats), via Wikimedia Commons. Public domain.";
 
-PLATES.push({id:"pl-regions", unit:"org", file:"img/regions-openstax.jpg", name:"Regions of the body, anterior and posterior", wide:true,
-  credit:"OpenStax, Anatomy and Physiology, via Wikimedia Commons. CC BY 4.0.",
-  caption:"Every region carries a Latin noun and an adjective form in parentheses — the adjective is the one used in clinical notes (an <i>antecubital</i> vein, a <i>popliteal</i> pulse). Read the anterior view top to bottom, then the posterior, then test yourself with the Body regions set in Match.",
-  find:["Antecubital (front of elbow)","Antebrachial (forearm)","Carpal (wrist)","Inguinal (groin)","Crural (leg)","Popliteal (back of knee)","Sural (calf)","Calcaneal (heel)","Acromial (shoulder)","Olecranal (back of elbow)"]});
-
 PLATES.push({id:"pl-skel-num", unit:"bone", file:"img/skeleton-front-numbered.png", name:"The skeleton, numbered", credit:LOH,
   caption:"Red numbers point to single bones; blue numbers point to groups. Cover the list and name each number before you check. Then use the quiz — it asks the numbers in random order.",
   key:[
