@@ -274,12 +274,20 @@ ok(/name the plate/i.test(src), 'plate recognition quiz exists');
 
 // ---------- 7c. verdicts ----------
 head('verdicts');
-ok(/GOAT/.test(A.verdictFor(100).t), '100% is the GOAT');
-ok(/him/.test(A.verdictFor(90).t) && /him/.test(A.verdictFor(85).t), '85-99 is "you\'re him"');
-ok(/Main character/.test(A.verdictFor(75).t) && /Main character/.test(A.verdictFor(70).t), '70-84 is main character');
-ok(/bot/.test(A.verdictFor(60).t) && /bot/.test(A.verdictFor(50).t), '50-69 is a bot');
-ok(/cheeks/.test(A.verdictFor(49).t) && /cheeks/.test(A.verdictFor(0).t), 'below 50 is cheeks');
-for (let p = 0; p <= 100; p++) ok(!!A.verdictFor(p).t && !!A.verdictFor(p).a, 'every score has a verdict and advice: ' + p);
+const tier = p => A.VERDICTS.find(v => p >= v.min);
+ok(A.VERDICTS.length === 5 && A.VERDICTS[0].min === 100 && A.VERDICTS[4].min === 0, 'five grade tiers from 100 down to 0');
+ok(A.VERDICTS.every((v, i, a) => i === 0 || v.min < a[i - 1].min), 'tiers are ordered high to low');
+ok(A.VERDICTS.every(v => v.t.length >= 1 && v.a), 'every tier has at least one title and its advice');
+ok(new Set(A.VERDICTS.flatMap(v => v.t)).size === A.VERDICTS.flatMap(v => v.t).length, 'no verdict line repeats across tiers');
+[100, 99, 85, 84, 70, 69, 50, 49, 0].forEach(p => {
+  for (let i = 0; i < 20; i++) {
+    const v = A.verdictFor(p);
+    ok(tier(p).t.includes(v.t) && v.a === tier(p).a, 'score ' + p + ' draws from its own tier', v.t);
+  }
+});
+ok(tier(100).t.some(t => /GOAT/.test(t)) && tier(0).t.some(t => /cheeks/.test(t)), 'GOAT at the top, cheeks at the bottom');
+ok(A.REACT.ok.length >= 4 && A.REACT.no.length >= 4, 'reaction pools exist for right and wrong answers');
+ok(/reaction\(right\)/.test(src), 'reactions are shown after exam answers');
 ok((src.match(/verdictFor\(/g) || []).length >= 5, 'verdict is used on every quiz result screen');
 
 // ---------- 8. markup ----------

@@ -156,21 +156,39 @@ function diagramQuiz(dg){
   });
 }
 
-/* The verdict on a score: title first, then the honest advice. */
+/* The verdict on a score: a random title for the grade tier, then honest advice.
+   Edit the pools freely; anything with one entry is fine. */
+var VERDICTS = [
+  {min:100, a:"Nothing left here. Push into a harder mix — all units, application only.",
+   t:["You’re the GOAT.","Absolute cinema.","Ate and left no crumbs.","+1000 aura.","We’re so back.","Goated, no cap."]},
+  {min:85,  a:"Strong. The misses below are the whole job now.",
+   t:["You’re him.","Certified.","Locked in.","Big W.","Sheesh.","He’s him, chat."]},
+  {min:70,  a:"Solid base, but the gaps are real. Work the misses, then retake.",
+   t:["Main character energy.","Lowkey solid.","Not bad, twin.","Say less — almost there.","It’s giving competent."]},
+  {min:50,  a:"About half. Back to the flashcards for this unit before testing again.",
+   t:["You’re a bot.","Mid.","It’s giving NPC.","Bruh.","Crack a lackin’.","Chat, is this real?"]},
+  {min:0,   a:"Start with the flashcards and the diagrams. Testing before the material is in place mostly measures frustration.",
+   t:["You’re cheeks.","Cooked.","It’s so over.","Pack it up.","Nah bro.","Down bad."]}
+];
+/* Short reactions after a single answer. Shown about a third of the time so they stay funny. */
+var REACT = {
+  ok:["W","say less","no cap","sheesh","easy","locked in","twin ❤","that’s him"],
+  no:["bruh","nah","crack a lackin’","L","not this one, twin","cooked","chat…","it’s giving guess"]
+};
 function verdictFor(p){
-  if(p === 100) return {t:"You’re the GOAT.", a:"Nothing left here. Push into a harder mix — all units, application only."};
-  if(p >= 85)   return {t:"You’re him.", a:"Strong. The misses below are the whole job now."};
-  if(p >= 70)   return {t:"Main character energy.", a:"Solid base, but the gaps are real. Work the misses, then retake."};
-  if(p >= 50)   return {t:"You’re a bot.", a:"About half. Back to the flashcards for this unit before testing again."};
-  return {t:"You’re cheeks.", a:"Start with the flashcards and the diagrams. Testing before the material is in place mostly measures frustration."};
+  for(var i=0;i<VERDICTS.length;i++){
+    if(p >= VERDICTS[i].min){ var v = VERDICTS[i]; return {t:pick(v.t,1)[0], a:v.a}; }
+  }
+  return {t:VERDICTS[VERDICTS.length-1].t[0], a:VERDICTS[VERDICTS.length-1].a};
 }
+function reaction(right){ return Math.random() < 0.35 ? " — " + pick(right ? REACT.ok : REACT.no, 1)[0] : ""; }
 
 /* ---- tests run without a browser ---- */
 if(typeof window === "undefined"){
   module.exports = {UNITS:UNITS, DIAGRAMS:DIAGRAMS, PLATES:PLATES, ALL_CARDS:ALL_CARDS, ALL_QS:ALL_QS,
     MATCHSETS:MATCHSETS, GEN_QS:GEN_QS, genFor:genFor, matchSetsFor:matchSetsFor, matchFromSet:matchFromSet, plateKeyQuiz:plateKeyQuiz,
     cardsFor:cardsFor, qsFor:qsFor, buildExam:buildExam, examPool:examPool, matchSet:matchSet,
-    diagramQuiz:diagramQuiz, diagramsFor:diagramsFor, platesFor:platesFor, plateQuiz:plateQuiz, verdictFor:verdictFor, schedule:schedule, newState:newState,
+    diagramQuiz:diagramQuiz, diagramsFor:diagramsFor, platesFor:platesFor, plateQuiz:plateQuiz, verdictFor:verdictFor, VERDICTS:VERDICTS, REACT:REACT, schedule:schedule, newState:newState,
     isDue:isDue, isMastered:isMastered, INTERVAL:INTERVAL, todayIndex:todayIndex};
   return;
 }
@@ -442,7 +460,7 @@ function answer(idx){
     if(o.w && (o.ok || i === idx)) b.innerHTML += '<span class="why">'+o.w+'</span>';
   });
   $("#fb").innerHTML = '<div class="fb '+(right?"good":"bad")+'"><span class="lead">'+
-    (right ? "Correct" : "Not this one") + '</span>'+q.e+'</div>';
+    (right ? "Correct" : "Not this one") + reaction(right) + '</span>'+q.e+'</div>';
   renderDots();
   var nb = $("#qNext"); nb.hidden = false;
   nb.textContent = (exam.i === exam.qs.length-1) ? "See results" : "Next";
