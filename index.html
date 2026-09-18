@@ -2574,6 +2574,10 @@ var REACT = {
   ok:["W","say less","no cap","easy","locked in","twin ❤","that’s him","period","on god","you did that","clean","too easy"],
   no:["bruh","nah","crack a lackin’","L","not this one, twin","cooked","chat…","ain’t no way","lock in","who told you that","respectfully, no"]
 };
+/* The two bottom grade tiers double as wrong-answer reactions (Daniel's call). */
+VERDICTS.filter(function(v){ return v.min <= 50; }).forEach(function(v){
+  v.t.forEach(function(t){ var r = t.replace(/\.$/, ""); if(REACT.no.indexOf(r) < 0) REACT.no.push(r); });
+});
 function verdictFor(p){
   for(var i=0;i<VERDICTS.length;i++){
     if(p >= VERDICTS[i].min){ var v = VERDICTS[i]; return {t:pick(v.t,1)[0], a:v.a}; }

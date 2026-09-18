@@ -288,6 +288,9 @@ ok(new Set(A.VERDICTS.flatMap(v => v.t)).size === A.VERDICTS.flatMap(v => v.t).l
 });
 ok(tier(100).t.some(t => /GOAT/.test(t)) && tier(0).t.some(t => /cheeks/.test(t)), 'GOAT at the top, cheeks at the bottom');
 ok(A.REACT.ok.length >= 4 && A.REACT.no.length >= 4, 'reaction pools exist for right and wrong answers');
+A.VERDICTS.filter(v => v.min <= 50).forEach(v => v.t.forEach(t => ok(A.REACT.no.includes(t.replace(/\.$/, '')), 'bottom-tier verdict doubles as a wrong-answer reaction: ' + t)));
+ok(!A.VERDICTS.filter(v => v.min >= 70).some(v => v.t.some(t => A.REACT.no.includes(t.replace(/\.$/, '')))), 'good-grade verdicts never appear after a wrong answer');
+ok(new Set(A.REACT.no).size === A.REACT.no.length, 'no duplicate wrong-answer reactions');
 const allLines = A.VERDICTS.flatMap(v => v.t).concat(A.REACT.ok, A.REACT.no).join(' | ');
 ok(!/sheesh|no crumbs|behind the pack|giving competent|giving guess|almost there|we outside|put on for|stay ready/i.test(allLines), 'vetoed lines are gone', allLines);
 ok(/reaction\(right\)/.test(src), 'reactions are shown after exam answers');
